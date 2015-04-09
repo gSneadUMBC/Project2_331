@@ -1,13 +1,18 @@
 <?php
-
+//Starts the session with the stored month
 session_start();
 ?>
 
+//imports html start and CSS features
 <?php include("style.html"); ?>
+
+//radio buttons that pick what type of advising
 <form action="studentScheduler.php" method="POST" name="form1">
+
 <br>
 What kind of advising are you looking for?
 <br>
+
 <input type="radio" name="appointment" value="any" checked="checked">
  Any
 <input type="radio" name="appointment" value="individual">
@@ -16,11 +21,16 @@ Individual
 Group
 <br><br><br>
 
-What day would you like to look at?
+
+
+//includes HTML calendar based on the current month
+
+	What day would you like to look at?
 <?php
-$currentMonth = $_SESSION["CurrMonth"];
-echo("The month is " .$_SESSION["CurrMonth"]);
-include("$currentMonth".".html");
+
+	$currentMonth = $_SESSION["CurrMonth"];
+	echo("The month is " .$_SESSION["CurrMonth"]);
+	include("$currentMonth".".html");
 
 ?>
 
@@ -30,6 +40,8 @@ include("$currentMonth".".html");
 <br>
 
 <?php
+
+	//this block collects the date and type of appointment for the submit button below	
 	include("CommonMethods.php");
 
   	$COMMON = new common($debug);	
@@ -39,18 +51,19 @@ include("$currentMonth".".html");
 	echo("Selected an avalable appointment from the list below or choose another day above.");
 	echo("<br>");
 	echo("<form action='studentScheduler.php' method='post' name='form2'>");
-	$temp = 0;
-	
 
+		
+	//this conditional decides which available appointments to show based on the radio button input above
 	if($type == "any")
 	{
-		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'";
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND 'Slots` > 0";
 		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	else
 	{	
 
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type'";
+	//this block prints out the appointments available to the students
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type' AND 'Slots` > 0";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	echo("<table border='3px'>");
@@ -74,6 +87,8 @@ include("$currentMonth".".html");
 
 		echo("</tr>");    
 	  }
+	
+	//assigns the id of the picked appt to a variable and then uses that variable to 
 	$picked = $_POST['chosenAppt'];
 	echo("</table>");
 	echo("<input type='submit' value='Schedule'>");
@@ -81,6 +96,7 @@ include("$currentMonth".".html");
 	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
+//conditional statement to only execute sql commands if the student has picked an appointment
 if($picked)
 {
 
