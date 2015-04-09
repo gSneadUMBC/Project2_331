@@ -12,20 +12,20 @@ session_start();
 <form action="AdviLogin.php" method="GET">
    Advisor E-mail:<br>
    <input type="email" name="email">
-   <br>
+   <br><br>
    Password:<br>
    <input type="password" name="pwd">
-   <br>
+   <br><br>
 <input type="submit" value="Login">
 </form>
-
+<br>
 <form action='schedule.php' >
 <input  type="submit" value = "Schedule appointments">
 </form>
 <?php
 $_SESSION["user"]= $_GET['email'];
 $user = $_SESSION["user"];
-echo ("the user is ".$user);
+echo ("Successfully logged in with: ".$user);
 ?>
 </body>
 </html>
