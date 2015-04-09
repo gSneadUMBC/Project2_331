@@ -1,0 +1,7 @@
+Things to implement:
+
+- student recognition (greeting as they log in)
+- Logout button
+- advisor appointment viewing(almost a copy/paste form student scheduler)
+- advisor passwords 
+- calendar buttons and refreshing (for some reason the calendar will not show up on the refreshed student scheduler)
