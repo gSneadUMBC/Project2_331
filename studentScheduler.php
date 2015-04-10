@@ -106,11 +106,16 @@ else{
 	
 if($picked)
 {
+$studID = $_SESSION["student"];
 
 $sql=
 "INSERT INTO `student Appts` (`Student ID`,`Date`, `Time`, `Advisor`, `Advisor E-mail`) 
-VALUES ('UA54617','$row[2]','$row[1]','$row[5]','$row[6]')"; 
+VALUES ('$studID','$row[2]','$row[1]','$row[5]','$row[6]')"; 
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+$sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
 }
 
 if ($testing){
