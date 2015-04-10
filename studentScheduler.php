@@ -67,13 +67,13 @@ else{
 
 	if($type == "any")
 	{
-		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'";
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `Slots` > 0";
 		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	else
 	{	
 	
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type' AND 'Slots` > 0";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type' AND `Slots` > 0";
 	
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
