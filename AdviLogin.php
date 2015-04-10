@@ -20,7 +20,10 @@ session_start();
 </form>
 <br>
 <form action='schedule.php' >
-<input  type="submit" value = "Schedule appointments">
+<input  type="submit" value = "schedule appointments">
+</form>
+<form action='adviViewAppts.php' >
+<input  type="submit" value = "view appointments">
 </form>
 <?php
 $_SESSION["user"]= $_GET['email'];
