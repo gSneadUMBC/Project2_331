@@ -4,4 +4,4 @@ Things to implement:
 - Logout button
 - advisor appointment viewing(almost a copy/paste form student scheduler)
 - advisor passwords 
-- calendar buttons and refreshing (for some reason the calendar will not show up on the refreshed student scheduler)
+- calendar buttons and refreshing (for some reason the calendar will not show up on the refreshed student scheduler) it takes two presses to on any button to change page
