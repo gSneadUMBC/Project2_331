@@ -4,6 +4,7 @@ session_start();
 
 $testing = True;
 
+
 if ($testing){
 echo("Before if " . $_SESSION["MonthInt"]);
 if ( $_POST['prev'] == "prev"){
@@ -14,7 +15,6 @@ if ( $_POST['prev'] == "prev"){
 elseif( $_POST['next'] == next)
 	$_SESSION["MonthInt"]++;
 }
-
 ?>
 
 <?php include("style.html"); ?>
@@ -32,6 +32,7 @@ Group
 
 What day would you like to look at?
 <?php
+$testing = True;
 
 $months = array("January", "Febuary", "March", "April", "May" );
 
@@ -123,8 +124,8 @@ if($picked)
 $studID = $_SESSION["student"];
 
 $sql=
-"INSERT INTO `student Appts` (`Student ID`,`Date`, `Time`, `Advisor`, `Advisor E-mail`) 
-VALUES ('$studID','$row[2]','$row[1]','$row[5]','$row[6]')"; 
+"INSERT INTO `student Appts` (`Student ID`, `Appt_id`,`Date`, `Time`, `Advisor`, `Advisor E-mail`) 
+VALUES ('$studID','$picked','$row[2]','$row[1]','$row[5]','$row[6]')"; 
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 $sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
