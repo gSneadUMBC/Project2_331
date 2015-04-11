@@ -1,6 +1,20 @@
 <?php
 
 session_start();
+
+$testing = True;
+
+if ($testing){
+echo("Before if " . $_SESSION["MonthInt"]);
+if ( $_POST['prev'] == "prev"){
+	$_SESSION["MonthInt"]--;
+	echo("After if " . $_SESSION["MonthInt"]);	
+	echo("<br>pressed Prev");
+}
+elseif( $_POST['next'] == next)
+	$_SESSION["MonthInt"]++;
+}
+
 ?>
 
 <?php include("style.html"); ?>
@@ -18,7 +32,6 @@ Group
 
 What day would you like to look at?
 <?php
-$testing = True;
 
 $months = array("January", "Febuary", "March", "April", "May" );
 
@@ -119,14 +132,4 @@ $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 }
 
-if ($testing){
-echo("Before if " . $_SESSION["MonthInt"]);
-if ( $_POST['prev'] == "prev"){
-	$_SESSION["MonthInt"]--;
-	echo("After if " . $_SESSION["MonthInt"]);	
-	echo("<br>pressed Prev");
-}
-elseif( $_POST['next'] == next)
-	$_SESSION["MonthInt"]++;
-}
 ?>
