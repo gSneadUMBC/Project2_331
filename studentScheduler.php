@@ -1,12 +1,11 @@
 <?php
 
 session_start();
-
+$studID = $_SESSION["student"];
 $testing = True;
 
 
 if ($testing){
-echo("Before if " . $_SESSION["MonthInt"]);
 if ( $_POST['prev'] == "prev"){
 	$_SESSION["MonthInt"]--;
 	echo("After if " . $_SESSION["MonthInt"]);	
@@ -40,22 +39,20 @@ if ($_SESSION["MonthInt"]==null && $testing){
 for ($i = 0; $months[$i] != "April"; $i++){
 	$_SESSION["MonthInt"] = $i; 
 }
-	echo("Initial set up");
+
 	$_SESSION["MonthInt"] ++;
 	$monthInt = $_SESSION["MonthInt"];
 }
-echo("<br>" . $_SESSION["MonthInt"] . "<br>");
+
 
 if ($testing)
 {
 	$currentMonth = $months[$_SESSION["MonthInt"]];
-	echo("<br>The month is " . $currentMonth);
-	include($currentMonth . ".html");
+		include($currentMonth . ".html");
 
 }
 else{
 	$currentMonth = $_SESSION["CurrMonth"];
-	echo("<br>The month is " . $_SESSION["CurrMonth"]);
 	include($currentMonth . ".html");
 }
 ?>
@@ -73,10 +70,10 @@ else{
 	$type = $_POST['appointment'];
 	$monthChange = $_POST['prev'];
 
-	echo("Selected an avalable appointment from the list below or choose another day above.");
+   	echo("<table border='3px'>");
 	echo("<br>");
 	echo("<form action='studentScheduler.php' method='post' name='form2'>");
-	$temp = 0;
+
 	
 
 	if($type == "any")
@@ -91,7 +88,7 @@ else{
 	
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
-	echo("<table border='3px'>");
+	
 	echo("<th align='center' colspan = '7'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
         echo("<td>" . "<strong>Select" . "</td>");
@@ -113,19 +110,20 @@ else{
 	  }
 	$picked = $_POST['chosenAppt'];
 	echo("</table>");
-	echo("<input type='submit' value='Schedule'>");
+	echo("<input type='submit' value='Schedule' >");
 	echo("</form>");
+
 	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
-	
+
 if($picked)
 {
-$studID = $_SESSION["student"];
+
 
 $sql=
-"INSERT INTO `student Appts` (`Student ID`, `Appt_id`,`Date`, `Time`, `Advisor`, `Advisor E-mail`) 
-VALUES ('$studID','$picked','$row[2]','$row[1]','$row[5]','$row[6]')"; 
+"INSERT INTO `student Appts` (`Appt_id`,`Student ID`,`Date`, `Time`,`type`, `Advisor`, `Advisor E-mail`) 
+VALUES ('$picked','$studID','$row[2]','$row[1]','$row[3]', '$row[5]','$row[6]')"; 
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 $sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
