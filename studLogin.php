@@ -1,5 +1,7 @@
 <?php
 session_start();
+session_destroy();
+session_start();
 include('style.html');
 $currentDate = getdate(date("U"));
 $_SESSION["CurrMonth"] = $currentDate[month];
@@ -9,7 +11,7 @@ $_SESSION["CurrMonth"] = $currentDate[month];
 
 <h2> Welcome to the UMBC ITE advising Sign-up web Application! </h2>
 
-<form action='studLogin.php' method='GET'>
+<form action='studLogin.php' method='POST'>
 Student ID:<br><input type='text' name='loginID'><br>
 <input type='submit' value = "Login">
 </form>
@@ -18,7 +20,7 @@ Student ID:<br><input type='text' name='loginID'><br>
 include("CommonMethods.php");
 $COMMON = new common($debug);
 
-$student = $_GET['loginID'];
+$student = $_POST['loginID'];
 
 $sql = "select `Student ID` from `Students`";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
