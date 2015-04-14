@@ -5,20 +5,11 @@ $studID = $_SESSION["student"];
 $testing = True;
 
 
-if ($testing){
 
-if ( $_POST['prev'] == "prev")
+if ( $_POST['prev'] == "prev"){
 	$_SESSION["MonthInt"]--;
-
-elseif( $_POST['next'] == next)
-	$_SESSION["MonthInt"]++;
 }
-else{
-
-if ( $_POST['prev'] == "prev")
-	$_SESSION["MonthInt"]--;
-
-elseif( $_POST['next'] == next)
+elseif( $_POST['next'] == next){
 	$_SESSION["MonthInt"]++;
 }
 ?>
@@ -122,10 +113,30 @@ else{
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
 
+
+
 if($picked)
 {
 
 
+  $valid = false;
+  $sql = "select `Student ID` from `student Appts` where `Student ID` = '$StudID'";
+  $rsValid = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+  $rowValid = mysql_fetch_row($rsValid);
+
+  if($rowValid[0])
+  {
+    $valid = true;
+  }
+ 
+
+
+if(!$valid)
+{
+echo("YOu already have an advising appointment!!!");
+}
+else
+{
 $sql=
 "INSERT INTO `student Appts` (`Appt_id`,`Student ID`,`Date`, `Time`,`type`, `Advisor`, `Advisor E-mail`) 
 VALUES ('$picked','$studID','$row[2]','$row[1]','$row[3]', '$row[5]','$row[6]')"; 
@@ -133,7 +144,7 @@ $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 $sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
+}
 }
 
 ?>

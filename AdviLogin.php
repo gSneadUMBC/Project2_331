@@ -22,7 +22,7 @@ session_start();
 <form action='schedule.php' >
 <input  type="submit" value = "schedule appointments">
 </form>
-<form action='adviViewAppts.php' >
+<form action='adviViewAppt.php' >
 <input  type="submit" value = "view appointments">
 </form>
 <?php
