@@ -6,11 +6,18 @@ $testing = True;
 
 
 if ($testing){
-if ( $_POST['prev'] == "prev"){
+
+if ( $_POST['prev'] == "prev")
 	$_SESSION["MonthInt"]--;
-	echo("After if " . $_SESSION["MonthInt"]);	
-	echo("<br>pressed Prev");
+
+elseif( $_POST['next'] == next)
+	$_SESSION["MonthInt"]++;
 }
+else{
+
+if ( $_POST['prev'] == "prev")
+	$_SESSION["MonthInt"]--;
+
 elseif( $_POST['next'] == next)
 	$_SESSION["MonthInt"]++;
 }
@@ -36,10 +43,10 @@ $testing = True;
 $months = array("January", "Febuary", "March", "April", "May" );
 
 if ($_SESSION["MonthInt"]==null && $testing){
-for ($i = 0; $months[$i] != "April"; $i++){
+for ($i = 0; $months[$i] != "April"; $i++){				//**
 	$_SESSION["MonthInt"] = $i; 
 }
-
+	echo("<br>Initial month set up");
 	$_SESSION["MonthInt"] ++;
 	$monthInt = $_SESSION["MonthInt"];
 }
@@ -48,7 +55,7 @@ for ($i = 0; $months[$i] != "April"; $i++){
 if ($testing)
 {
 	$currentMonth = $months[$_SESSION["MonthInt"]];
-		include($currentMonth . ".html");
+	include($currentMonth . ".html");
 
 }
 else{
@@ -56,8 +63,6 @@ else{
 	include($currentMonth . ".html");
 }
 ?>
-
-
 
 </form>
 <br>
