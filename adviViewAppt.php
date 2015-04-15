@@ -88,15 +88,22 @@ if($date){
 	if($type == "any")
 	{
 		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$user'";
-		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+		
+	}
+	elseif($type == "individual")
+	{	
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `type`='$type' AND `Advisor Email` = '$user' ";
+		
 	}
 	else
-	{	
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `type`='$type' AND `Advisor Email` = '$user' ";
-
+	{
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `type`='$type'";
 	
-	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	
 	}
+
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
 	echo("<table border='3px'>");
 	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
         echo("<tr>");

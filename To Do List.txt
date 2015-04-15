@@ -2,6 +2,6 @@ Things to implement:
 
 - student recognition (greeting as they log in)
 - Logout button
-- advisor appointment viewing ( halfway done, needs table to be added for appointment details)
 - advisor passwords 
 - calendar buttons and refreshing (for some reason the calendar will not show up on the refreshed student scheduler) it takes two presses to on any button to change page
+-add delete appointment buttons for students and advisors

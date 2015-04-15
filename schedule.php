@@ -1,7 +1,6 @@
 <?php
 session_start();
-session_destroy();
-session_start();
+
 ?>
 
 
@@ -151,18 +150,25 @@ default:
 
 
 if($apptType == "group"){
-  $slots = 10;
-
-}
-else{
-  $slots = 1;
-
-}
+$slots = 10;
 
 $sql = "insert into `Adv_made_Appts`
 (`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
 values('$apptTime','$appDate','$apptType',$slots,'$Advisor','$AdEmail')";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+}
+else
+{
+
+$slots = 1;
+$sql = "insert into `Adv_made_Appts`
+(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
+values('$apptTime','$appDate','$apptType',$slots,'$Advisor','$AdEmail')";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+}
+
 }
 else{
   echo("Please choose a date, time, and type for your appointment");
@@ -172,7 +178,6 @@ $appDate = 0;
 
 
 ?>
-<form>
-<input type= "submit" value ="logout" onclick = 
+
 </body>
 </html>
