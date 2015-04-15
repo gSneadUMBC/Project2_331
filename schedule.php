@@ -1,8 +1,10 @@
 <?php
 session_start();
 
-?>
+if ($_POST['monthChange'])
+	$_SESSION["CurrMonth"]= $_POST['monthChange'];
 
+?>
 
 <!DOCTYPE html>
 <html>
@@ -22,7 +24,6 @@ $row = mysql_fetch_row($rs1);
 $user =$row[0];
 
 
-
 $sql= "SELECT `lname` FROM `Advisors` WHERE `E-mail` = '$AdEmail'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 $row = mysql_fetch_row($rs);
@@ -33,14 +34,23 @@ echo("Welcome, ".$user. " ". $Advisor."<br>")
 ?>
 <h3>Make a new appointment available!</h3>
 <form action="schedule.php" method="post">
+<br>
+<form action="studentScheduler.php" method="POST" name="form1">
+<br>
+<?php
 
-   Day of Appointment:
+	$currentMonth = $_SESSION["CurrMonth"];
+	include($currentMonth . ".html");
+?>
+
+</form><br><br>
 <br>
-<input type="date" name="apptDate" min="2015-03-01" max="2015-04-30" ><br><br>
-<br>
+<table>
+<tr>
+<td>
    Time:
-<br>
 <select name="time">
+   <option vluae="blank"> </option>
    <option value="9:00:00"> 9:00 AM </option>
    <option value="9:30:00"> 9:30 AM </option>
    <option value="10:00:00"> 10:00 AM </option>
@@ -57,16 +67,18 @@ echo("Welcome, ".$user. " ". $Advisor."<br>")
    <option value="15:30:00"> 3:30 PM </option>
    <option value="16:00:00"> 4:00 PM </option>
 </select>
+</td>
+<td>
    Type:
+<select name="advType">
+   <option value="blank"> </option>
+   <option value="Individual"> Indvidual </option>
+   <option value="Group"> Group </option>
+</select>
+</td> </tr>
+</table>
 <br>
-<input type="radio" name="appType" value="group">Group
 <br>
-<input type="radio" name="appType" value="individual">Individual
-
-
-<br>
-<br>
-
 
 
 <input type="submit" value="Submit">
