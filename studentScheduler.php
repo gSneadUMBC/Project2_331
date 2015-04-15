@@ -109,34 +109,33 @@ else{
 	echo("<input type='submit' value='Schedule' >");
 	echo("</form>");
 
-	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
-	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-	$row = mysql_fetch_row($rs);
-
-
 
 if($picked)
 {
 
-
-  $valid = false;
-  $sql = "select `Student ID` from `student Appts` where `Student ID` = '$StudID'";
-  $rsValid = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-  $rowValid = mysql_fetch_row($rsValid);
-
-  if($rowValid[0])
+echo($studID);
+  $valid = true;
+  $sql = "select * from `student Appts` where `Student ID` = '$studID'";
+  $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+  $row = mysql_fetch_row($rs);
+	echo("value is: ".$row[0]."<br>");
+  if($row[0])
   {
-    $valid = true;
+    $valid = false;
+	echo($valid."<br>");
   }
  
 
 
-if(!$valid)
+if($valid == false)
 {
 echo("YOu already have an advising appointment!!!");
 }
 else
 {
+$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	$row = mysql_fetch_row($rs);
 $sql=
 "INSERT INTO `student Appts` (`Appt_id`,`Student ID`,`Date`, `Time`,`type`, `Advisor`, `Advisor E-mail`) 
 VALUES ('$picked','$studID','$row[2]','$row[1]','$row[3]', '$row[5]','$row[6]')"; 
