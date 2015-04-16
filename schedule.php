@@ -35,14 +35,13 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 <h3>Make a new appointment available!</h3>
 <form action="schedule.php" method="post">
 <br>
-<form action="studentScheduler.php" method="POST" name="form1">
 <br>
 <?php
 
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_SESSION['calDate'])
+if ($_POST['calDate'] || $_POST['schedule'])
 {
 	echo("</form><br><br>");
 	echo("<br>");
@@ -53,8 +52,8 @@ if ($_SESSION['calDate'])
 	echo("Type");
 	echo("</td><td>");
 	echo("Group Size");
-	ecno("</td><tr><td>");
-	ecno("<select name='time'>");
+	echo("</td><tr><td>");
+	echo("<select name='time'>");
    		echo("<option vluae='blank'> </option>");
    		echo("<option value='9:00:00'> 9:00 AM </option>");
    		echo("<option value='9:30:00'> 9:30 AM </option>");
@@ -80,8 +79,50 @@ if ($_SESSION['calDate'])
 	echo("<input type='text' name='grpSize'>");
 	echo("</td></tr></table>");
 	echo("<br><br>");
-	echo("<input type='submit' value='Submit'>");
 	echo("</form>");
+
+	echo("<input type='submit' name='schedule' value='Submit'>");
+	echo("</form>");
+	echo("<br><br>");
+		
+	$COMMON = new common($debug);
+	$date =$_GET['calDate'];	
+	$type = $_GET['appointment'];
+
+	echo("Selected an avalable appointment from the list below or choose another day above.");
+	echo("<br>");
+	echo("<form action='adviViewAppt.php' method='GET' name='form2'>");
+	$user = $_SESSION["user"];
+	
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$user'";
+
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+	echo("<table border='3px'>");
+	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+        echo("<tr>");
+        echo("<td align='center'>" . "<strong>Select" . "</td>");
+        echo("<td align='center'>" . "<strong>Type" . "</td>");
+        echo("<td align='center'>" . "<strong>Time" . "</td>");
+    
+        echo("</tr>");
+
+	while($row = mysql_fetch_row($rs))
+	  {     
+
+	
+	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
+		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$row[1]."</td>");	   
+
+		echo("</tr>");    
+	  }
+
+	$picked = $_GET['chosenAppt'];
+
+	echo("</table>");
+	echo("<input type='submit' value='View Appointment details'>");
+	echo("</form>");
+
 }
 
 $COMMON = new common($debug);
