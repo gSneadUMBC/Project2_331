@@ -1,5 +1,12 @@
 <?php
 session_start();
+session_destroy();
+
+session_start();
+
+$mydate=getdate(date("U"));
+$_SESSION["CurrMonth"] = $mydate[month];
+
 ?>
 
 <!DOCTYPE HTML>
