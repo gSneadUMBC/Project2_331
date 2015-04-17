@@ -30,7 +30,7 @@ $row = mysql_fetch_row($rs);
 $Advisor = $row[0];
 
 echo("Welcome, ".$user. " ". $Advisor."<br>");
-
+echo($user);
 ?>
 <h3>Make a new appointment available!</h3>
 <form action="schedule.php" method="post">
@@ -84,9 +84,9 @@ if ($_POST['calDate'] || $_POST['schedule'])
 	echo("<input type='submit' name='schedule' value='Submit'>");
 	echo("</form>");
 	echo("<br><br>");
-		
+		$debug= true;
 	$COMMON = new common($debug);
-	$date =$_GET['calDate'];	
+	$date =$_POST['calDate'];	
 	$type = $_GET['appointment'];
 
 	echo("Selected an avalable appointment from the list below or choose another day above.");
@@ -94,7 +94,7 @@ if ($_POST['calDate'] || $_POST['schedule'])
 	echo("<form action='adviViewAppt.php' method='GET' name='form2'>");
 	$user = $_SESSION["user"];
 	
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$user'";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
 
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
