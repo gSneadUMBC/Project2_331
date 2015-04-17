@@ -3,11 +3,14 @@
 session_start();
 $studID = $_SESSION["student"];
 
+//if one of the "monthChange" buttons is pressed change "CurrMonth"
 if ($_POST['monthChange']){
 	$_SESSION["CurrMonth"]= $_POST['monthChange'];
 }
 ?>
 
+<?php//	Radio buttons for type of appointment
+//********************************************************************?>
 <?php include("style.html"); ?>
 <form action="studentScheduler.php" method="POST" name="form1">
 <br>
@@ -20,7 +23,10 @@ Individual
 <input type="radio" name="appointment" value="group">
 Group
 <br><br><br>
+<?php//********************************************************************?>
 
+
+//  Month display include
 What day would you like to look at?
 <?php
 
@@ -44,7 +50,6 @@ What day would you like to look at?
 	echo("<form action='studentScheduler.php' method='post' name='form2'>");
 
 	
-
 	if($type == "any")
 	{
 		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `Slots` > 0";
