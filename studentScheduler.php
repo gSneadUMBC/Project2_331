@@ -2,15 +2,9 @@
 
 session_start();
 $studID = $_SESSION["student"];
-$testing = True;
 
-
-
-if ( $_POST['prev'] == "prev"){
-	$_SESSION["MonthInt"]--;
-}
-elseif( $_POST['next'] == next){
-	$_SESSION["MonthInt"]++;
+if ($_POST['monthChange']){
+	$_SESSION["CurrMonth"]= $_POST['monthChange'];
 }
 ?>
 
@@ -29,30 +23,9 @@ Group
 
 What day would you like to look at?
 <?php
-$testing = True;
 
-$months = array("January", "Febuary", "March", "April", "May" );
-
-if ($_SESSION["MonthInt"]==null && $testing){
-for ($i = 0; $months[$i] != "April"; $i++){				//**
-	$_SESSION["MonthInt"] = $i; 
-}
-	echo("<br>Initial month set up");
-	$_SESSION["MonthInt"] ++;
-	$monthInt = $_SESSION["MonthInt"];
-}
-
-
-if ($testing)
-{
-	$currentMonth = $months[$_SESSION["MonthInt"]];
-	include($currentMonth . ".html");
-
-}
-else{
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
-}
 ?>
 
 </form>

@@ -1,8 +1,10 @@
 <?php
 session_start();
 
-?>
+if ($_POST['monthChange'])
+	$_SESSION["CurrMonth"]= $_POST['monthChange'];
 
+?>
 
 <!DOCTYPE html>
 <html>
@@ -22,58 +24,107 @@ $row = mysql_fetch_row($rs1);
 $user =$row[0];
 
 
-
 $sql= "SELECT `lname` FROM `Advisors` WHERE `E-mail` = '$AdEmail'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 $row = mysql_fetch_row($rs);
 $Advisor = $row[0];
 
-echo("Welcome, ".$user. " ". $Advisor."<br>")
-
+echo("Welcome, ".$user. " ". $Advisor."<br>");
+echo($user);
 ?>
 <h3>Make a new appointment available!</h3>
 <form action="schedule.php" method="post">
-
-   Day of Appointment:
-<br>
-<input type="date" name="apptDate" min="2015-03-01" max="2015-04-30" ><br><br>
-<br>
-   Time:
-<br>
-<select name="time">
-   <option value="9:00:00"> 9:00 AM </option>
-   <option value="9:30:00"> 9:30 AM </option>
-   <option value="10:00:00"> 10:00 AM </option>
-   <option value="10:30:00"> 10:30 AM </option>
-   <option value="11:00:00"> 11:00 AM </option>
-   <option value="11:30:00"> 11:30 AM </option>
-   <option value="12:00:00"> 12:00 PM </option>
-   <option value="12:30:00"> 12:30 PM </option>
-   <option value="13:00:00"> 1:00 PM </option>
-   <option value="13:30:00"> 1:30 PM </option>
-   <option value="14:00:00"> 2:00 PM </option>
-   <option value="14:30:00"> 2:30 PM </option>
-   <option value="15:00:00"> 3:00 PM </option>
-   <option value="15:30:00"> 3:30 PM </option>
-   <option value="16:00:00"> 4:00 PM </option>
-</select>
-   Type:
-<br>
-<input type="radio" name="appType" value="group">Group
-<br>
-<input type="radio" name="appType" value="individual">Individual
-
-
 <br>
 <br>
-
-
-
-<input type="submit" value="Submit">
-</form>
-<br>
-
 <?php
+
+	$currentMonth = $_SESSION["CurrMonth"];
+	include($currentMonth . ".html");
+
+if ($_POST['calDate'] || $_POST['schedule'])
+{
+	echo("</form><br><br>");
+	echo("<br>");
+	echo("<table border='1px'>");
+	echo("<tr><td>");
+	echo("Time");
+	echo("</td><td>");
+	echo("Type");
+	echo("</td><td>");
+	echo("Group Size");
+	echo("</td><tr><td>");
+	echo("<select name='time'>");
+   		echo("<option vluae='blank'> </option>");
+   		echo("<option value='9:00:00'> 9:00 AM </option>");
+   		echo("<option value='9:30:00'> 9:30 AM </option>");
+   		echo("<option value='10:00:00'> 10:00 AM </option>");
+   		echo("<option value='10:30:00'> 10:30 AM </option>");
+   		echo("<option value='11:00:00'> 11:00 AM </option>");
+   		echo("<option value='11:30:00'> 11:30 AM </option>");
+   		echo("<option value='12:00:00'> 12:00 PM </option>");
+   		echo("<option value='12:30:00'> 12:30 PM </option>");
+   		echo("<option value='13:00:00'> 1:00 PM </option>");
+   		echo("<option value='13:30:00'> 1:30 PM </option>");
+   		echo("<option value='14:00:00'> 2:00 PM </option>");
+   		echo("<option value='14:30:00'> 2:30 PM </option>");
+   		echo("<option value='15:00:00'> 3:00 PM </option>");
+   		echo("<option value='15:30:00'> 3:30 PM </option>");
+   		echo("<option value='16:00:00'> 4:00 PM </option>");
+	echo("</select></td><td>");
+	echo("<select name='advType'>");
+   		echo("<option value='blank'> </option>");
+   		echo("<option value='Individual'> Indvidual </option>");
+   		echo("<option value='Group'> Group </option>");
+	echo("</select></td><td>");
+	echo("<input type='text' name='grpSize'>");
+	echo("</td></tr></table>");
+	echo("<br><br>");
+	echo("</form>");
+
+	echo("<input type='submit' name='schedule' value='Submit'>");
+	echo("</form>");
+	echo("<br><br>");
+		$debug= true;
+	$COMMON = new common($debug);
+	$date =$_POST['calDate'];	
+	$type = $_GET['appointment'];
+
+	echo("Selected an avalable appointment from the list below or choose another day above.");
+	echo("<br>");
+	echo("<form action='adviViewAppt.php' method='GET' name='form2'>");
+	$user = $_SESSION["user"];
+	
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
+
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+	echo("<table border='3px'>");
+	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+        echo("<tr>");
+        echo("<td align='center'>" . "<strong>Select" . "</td>");
+        echo("<td align='center'>" . "<strong>Type" . "</td>");
+        echo("<td align='center'>" . "<strong>Time" . "</td>");
+    
+        echo("</tr>");
+
+	while($row = mysql_fetch_row($rs))
+	  {     
+
+	
+	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
+		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$row[1]."</td>");	   
+
+		echo("</tr>");    
+	  }
+
+	$picked = $_GET['chosenAppt'];
+
+	echo("</table>");
+	echo("<input type='submit' value='View Appointment details'>");
+	echo("</form>");
+
+}
+
 $COMMON = new common($debug);
 
 
