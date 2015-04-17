@@ -41,6 +41,8 @@ if (in_array($student, $IDlist))
 {
 $_SESSION["student"] = $student;
 echo("Sucessfully logged in with ID:" . $student);
+echo("<form action='studentScheduler.php'>"."<br>");
+echo("<input type='submit' value = 'Continue to Schedule Appointment'>");
 }
 else
 {

@@ -1,16 +1,22 @@
 <?php
 
+//starts session and assigns session variables
 session_start();
 $studID = $_SESSION["student"];
 
-if ($_POST['monthChange']){
-	$_SESSION["CurrMonth"]= $_POST['monthChange'];
+
+if ($_GET['monthChange']){
+	$_SESSION["CurrMonth"]= $_GET['monthChange'];
 }
 ?>
 
+//this line includes the style elements for the page
 <?php include("style.html"); ?>
-<form action="studentScheduler.php" method="POST" name="form1">
+
+<?php //this is the form that allows you to pick what type of appointment you want ?>
+<form action="studentScheduler.php" method="GET" name="form1">
 <br>
+
 What kind of advising are you looking for?
 <br>
 <input type="radio" name="appointment" value="any" checked="checked">
@@ -21,30 +27,37 @@ Individual
 Group
 <br><br><br>
 
+<?php //this include is controlled by the current month selected, by default it is the current month we are in ?>
 What day would you like to look at?
 <?php
-
+	//this sets the include value for the calendar
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 ?>
 
 </form>
+
+
 <br>
 
 <?php
+
 	include("CommonMethods.php");
+	$debug = true;
 
+	//variables declared and used in this page
   	$COMMON = new common($debug);	
- 	$date =$_POST['calDate'];
-	$type = $_POST['appointment'];
-	$monthChange = $_POST['prev'];
+ 	$date =$_GET['calDate'];
+	$type = $_GET['appointment'];
+	$monthChange = $_GET['prev'];
 
+	//constructing the table that will house the appointments listed
    	echo("<table border='3px'>");
 	echo("<br>");
-	echo("<form action='studentScheduler.php' method='post' name='form2'>");
+	echo("<form action='studentScheduler.php' method='GET' name='form2'>");
 
 	
-
+	//displays appointments based on type chosen
 	if($type == "any")
 	{
 		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `Slots` > 0";
@@ -58,6 +71,7 @@ What day would you like to look at?
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	
+	//builds table with data from pulled appointments
 	echo("<th align='center' colspan = '7'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
         echo("<td>" . "<strong>Select" . "</td>");
@@ -77,21 +91,26 @@ What day would you like to look at?
 
 		echo("</tr>");    
 	  }
-	$picked = $_POST['chosenAppt'];
+	
+
 	echo("</table>");
 	echo("<input type='submit' value='Schedule' >");
 	echo("</form>");
 
+	//assigns the unique id of the appointment chosen
+	$picked = $_GET['chosenAppt'];
 
+
+//if the student has picked a value this will check to make sure they do not already have an appointment
+// and ask if they you like to delete their first appointment and make another one
 if($picked)
 {
 
-echo($studID);
+
   $valid = true;
   $sql = "select * from `student Appts` where `Student ID` = '$studID'";
   $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
   $row = mysql_fetch_row($rs);
-	echo("value is: ".$row[0]."<br>");
   if($row[0])
   {
     $valid = false;
@@ -102,21 +121,62 @@ echo($studID);
 
 if($valid == false)
 {
-echo("YOu already have an advising appointment!!!");
+echo("You already have an advising appointment!!!"."<br>");
+echo("Would you like to delete your current appointment and pick another?");
+
+echo("<form action='studentScheduler' method='POST'>");
+
+echo("<input type='submit' value='yes' name='delChoice' >");
+echo("<input type='submit' value='no'  name='delChoice' >");
+echo("</form>");
 }
+
+
 else
 {
+
+//collects the data from the advising information
 $sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
+
+//inserts collected data into student appts for the student's viewing
 $sql=
 "INSERT INTO `student Appts` (`Appt_id`,`Student ID`,`Date`, `Time`,`type`, `Advisor`, `Advisor E-mail`) 
 VALUES ('$picked','$studID','$row[2]','$row[1]','$row[3]', '$row[5]','$row[6]')"; 
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
+//removes a slot from that advising appointment
 $sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 }
+
 }
+
+//an assignment of choice whether to delete the appointment or not and IF so uses the conditional below
+$rmvAppt = $_POST['delChoice'];
+echo($rmvAppt);
+if ($rmvAppt == 'yes')
+
+
+{
+
+//selects the appointment ID and matches it to the unique ID of the advising appointment
+$sql = "select * from `student Appts` WHERE `Student ID` = '$studID'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+$row = mysql_fetch_row($rs);
+
+//adds a lots back because the student has removed their appointment
+$sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` + 1 WHERE `id` = '$row[1]'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+//deletes the appointment
+$sql = "Delete from `student Appts` where `Student ID` = '$studID'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+}
+
+
+
+
 
 ?>
