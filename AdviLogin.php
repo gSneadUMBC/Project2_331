@@ -29,9 +29,6 @@ $_SESSION["CurrMonth"] = $mydate[month];
 <form action='schedule.php' >
 <input  type="submit" value = "schedule appointments">
 </form>
-<form action='adviViewAppt.php' >
-<input  type="submit" value = "view appointments">
-</form>
 <?php
 $_SESSION["user"]= $_GET['email'];
 $user = $_SESSION["user"];
