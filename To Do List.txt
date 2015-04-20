@@ -1,0 +1,6 @@
+Things to implement:
+
+- student recognition (greeting as they log in)
+- Logout button
+- advisor passwords
+-add delete appointment buttons for students and advisors
