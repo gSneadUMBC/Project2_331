@@ -15,8 +15,11 @@ $_SESSION["CurrMonth"] = $currentDate[month];
 Student ID:<br><input type='text' name='loginID'><br>
 <input type='submit' value = "Login">
 </form>
-
 <?php
+
+	echo("<form action='studentScheduler.php' method='POST'>");
+	echo("<input type='submit' value = 'View Schedule'><br>");
+
 include("CommonMethods.php");
 $COMMON = new common($debug);
 
@@ -29,10 +32,7 @@ $IDlist = array();
 
 while ($row = mysql_fetch_row($rs))
 {
-	
 	$IDlist[] = $row[0];
-	
-
 }
 
 if($student)
