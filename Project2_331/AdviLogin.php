@@ -1,6 +1,5 @@
 <?php
 session_start();
-include('baseStyle.html');
 ?>
 
 <!DOCTYPE HTML>
@@ -13,20 +12,23 @@ include('baseStyle.html');
 <form action="AdviLogin.php" method="GET">
    Advisor E-mail:<br>
    <input type="email" name="email">
-   <br>
+   <br><br>
    Password:<br>
    <input type="password" name="pwd">
-   <br>
+   <br><br>
 <input type="submit" value="Login">
 </form>
-
+<br>
 <form action='schedule.php' >
-<input  type="submit" value = "Schedule appointments">
+<input  type="submit" value = "schedule appointments">
+</form>
+<form action='adviViewAppts.php' >
+<input  type="submit" value = "view appointments">
 </form>
 <?php
 $_SESSION["user"]= $_GET['email'];
 $user = $_SESSION["user"];
-echo ("the user is ".$user);
+echo ("Successfully logged in with: ".$user);
 ?>
 </body>
 </html>

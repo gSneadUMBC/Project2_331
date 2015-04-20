@@ -1,6 +1,7 @@
 <?php
 session_start();
-include('baseStyle.html');
+session_destroy();
+session_start();
 ?>
 
 

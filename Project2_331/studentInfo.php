@@ -1,6 +1,6 @@
 <html>
 <?php
-include('studStyle.html');
+include('style.html');
 ?>
 <br>
 <h3> Your upcoming appointments</h3>

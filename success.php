@@ -1,9 +1,12 @@
-<html>
 <?php
-include('studStyle.html');
+include("style2.html");
+
 ?>
+
+<h2>Thank you. Your Appointment has been Scheduled for:</h2>
 <br>
-<h3> Your upcoming appointments</h3>
+
+
 
 <?php
 
@@ -46,6 +49,15 @@ while($row = mysql_fetch_row($rs))
       }
     echo("</tr>");
   }
-
 ?>
 
+
+<br>
+<form action="logOut.php">
+<input type='submit' value="Log Out">
+</form>
+
+
+<?php
+include('footer.html');
+?>
