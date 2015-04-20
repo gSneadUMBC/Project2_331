@@ -10,7 +10,7 @@ if ($_GET['monthChange']){
 }
 ?>
 
-//this line includes the style elements for the page
+<?php //this line includes the style elements for the page ?>
 <?php include("style.html"); ?>
 
 <?php //this is the form that allows you to pick what type of appointment you want ?>
@@ -25,7 +25,7 @@ What kind of advising are you looking for?
 Individual
 <input type="radio" name="appointment" value="group">
 Group
-<br><br><br>
+<br><br>
 
 <?php //this include is controlled by the current month selected, by default it is the current month we are in ?>
 What day would you like to look at?
@@ -43,7 +43,7 @@ What day would you like to look at?
 <?php
 
 	include("CommonMethods.php");
-	$debug = true;
+	$debug = false;
 
 	//variables declared and used in this page
   	$COMMON = new common($debug);	
@@ -51,9 +51,9 @@ What day would you like to look at?
 	$type = $_GET['appointment'];
 	$monthChange = $_GET['prev'];
 
+if($date){
 	//constructing the table that will house the appointments listed
    	echo("<table border='3px'>");
-	echo("<br>");
 	echo("<form action='studentScheduler.php' method='GET' name='form2'>");
 
 	
@@ -96,7 +96,7 @@ What day would you like to look at?
 	echo("</table>");
 	echo("<input type='submit' value='Schedule' >");
 	echo("</form>");
-
+}
 	//assigns the unique id of the appointment chosen
 	$picked = $_GET['chosenAppt'];
 

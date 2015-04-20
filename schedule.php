@@ -1,8 +1,8 @@
 <?php
 session_start();
 include('style.html');
-if ($_POST['monthChange'])
-	$_SESSION["CurrMonth"]= $_POST['monthChange'];
+if ($_GET['monthChange'])
+	$_SESSION["CurrMonth"]= $_GET['monthChange'];
 
 ?>
 
@@ -70,7 +70,7 @@ if ($_GET['calDate'] || $_GET['schedule'])
    		echo("<option value='15:00:00'> 3:00 PM </option>");
    		echo("<option value='15:30:00'> 3:30 PM </option>");
    		echo("<option value='16:00:00'> 4:00 PM </option>");
-		echo("<option value='16:00:00'> 4:30 PM </option>");
+		echo("<option value='16:30:00'> 4:30 PM </option>");
 	echo("</select></td><td>");
 	echo("<select name='advType'>");
    		echo("<option value='blank'> </option>");
@@ -101,7 +101,7 @@ if ($_GET['calDate'] || $_GET['schedule'])
 			values('$apptTime','$date', '$advtype','$grpsize','$Advisor','$AdEmail')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 		}
-		else{
+		elseif($_GET['advType']=="individual"){
 			$sql = "insert into `Adv_made_Appts`
 			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
 			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail')";
