@@ -1,7 +1,7 @@
 <?php
 session_start();
 $studID = $_SESSION["student"];
-include('style.html');
+include('studStyle.html');
 echo("<br>");
 include("CommonMethods.php");
 

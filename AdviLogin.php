@@ -1,14 +1,11 @@
 <?php
 
 session_start();
-if ($_SESSOIN['user']){
-	echo("Opened");
-	header("location: schedule.php");
-	die;
-}
 session_destroy();
 
 session_start();
+
+include("loginStyle.html");
 
 $mydate=getdate(date("U"));
 $_SESSION["CurrMonth"] = $mydate[month];
@@ -28,9 +25,6 @@ $COMMON = new common($debug);
    Advisor E-mail:<br>
    <input type="email" name="email">
 <?php
-if ($_GET['email'])
-	echo("<font color='red'><br>**Reqired field<br></font>");
-else
    echo("<br><br>");
 ?>
    Password:<br>

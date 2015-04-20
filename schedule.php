@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('style.html');
+include('adviStyle.html');
 if ($_GET['monthChange'])
 	$_SESSION["CurrMonth"]= $_GET['monthChange'];
 
@@ -41,7 +41,7 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_GET['calDate'] || $_GET['schedule'])
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
 {
 	echo("<br>");
 	echo("<h3>Schedule appointment</h3>");
@@ -114,8 +114,14 @@ echo("<h3>". $user. "'s schedule");
 //Scheduled appointment view 
 	echo("<form action='schedule.php' method='GET' name='form2'>");
 	$user = $_SESSION["user"];
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
 
+//deletes the appointment
+	if($_GET['delete'] && $picked){
+		$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
+		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	}
+
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 	echo("<table border='3px'>");
@@ -138,6 +144,7 @@ echo("<h3>". $user. "'s schedule");
 	  }
 
 	echo("</table>");
+	echo("<input type='submit' name='delete' value='delete'>      ");
 	echo("<input type='submit' name='details' value='View Appointment details'>");
 	echo("</form>");
 
@@ -161,35 +168,39 @@ if ($_GET['details'] && $picked){
 		}
 	}
 	if($picked){
-	echo("<br>");
-	echo("<table border='1px'>");
-	echo("<th align='center' colspan = '5'> Displaying Students attending advising on ". $detailDate. " at ". $detailTime.  "</th>");
-       	echo("<tr>");
-        echo("<td align='center'>" . "<strong>Student ID" . "</td>");
-        echo("<td align='center'>" . "<strong>Major" . "</td>");
-	echo("<td align='center'>" . "<strong>First Name" . "</td>");
- 	echo("<td align='center'>" . "<strong>Last Name" . "</td>");
- 	echo("<td align='center'>" . "<strong>E-mail" . "</td>");
-	echo("</tr>");
-
-	for($i = 0;$i < count($studIDs);$i++)
-	{
-		$sql = "select * from `Students` WHERE `Student ID` = '$studIDs[$i]'";
-		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-		$row = mysql_fetch_row($rs);
-
-		echo("<tr>");
-        	echo("<td>" . "$row[1]" . "</td>");
-        	echo("<td>" . "$row[2]" . "</td>");
-		echo("<td>" . "$row[3]" . "</td>");
- 		echo("<td>" . "$row[4]" . "</td>");
- 		echo("<td>" . "$row[5]" . "</td>");
+		echo("<br>");
+		echo("<table border='1px'>");
+		echo("<th align='center' colspan = '5'> Displaying Students attending advising on ". $detailDate. " at ". $detailTime.  "</th>");
+       		echo("<tr>");
+        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
+        	echo("<td align='center'>" . "<strong>Major" . "</td>");
+		echo("<td align='center'>" . "<strong>First Name" . "</td>");
+ 		echo("<td align='center'>" . "<strong>Last Name" . "</td>");
+ 		echo("<td align='center'>" . "<strong>E-mail" . "</td>");
 		echo("</tr>");
+
+		for($i = 0;$i < count($studIDs);$i++){
+			$sql = "select * from `Students` WHERE `Student ID` = '$studIDs[$i]'";
+			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+			$row = mysql_fetch_row($rs);
+
+			echo("<tr>");
+        		echo("<td>" . "$row[1]" . "</td>");
+        		echo("<td>" . "$row[2]" . "</td>");
+			echo("<td>" . "$row[3]" . "</td>");
+ 			echo("<td>" . "$row[4]" . "</td>");
+ 			echo("<td>" . "$row[5]" . "</td>");
+			echo("</tr>");
+		}
 	}
-}
 
 }	
+if($_GET['delete'] && $picked){
 
+//deletes the appointment
+	$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+}
 ?>
 
 </body>

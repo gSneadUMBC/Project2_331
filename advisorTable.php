@@ -1,5 +1,5 @@
 <?php
-include('style.html');
+include('studStyle.html');
 ?>
 <br>
 <p><a href="http://advising.coeit.umbc.edu/advising-information/">

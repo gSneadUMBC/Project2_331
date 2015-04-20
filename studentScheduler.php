@@ -11,7 +11,7 @@ if ($_GET['monthChange']){
 ?>
 
 <?php //this line includes the style elements for the page ?>
-<?php include("style.html"); ?>
+<?php include("studStyle.html"); ?>
 
 <?php //this is the form that allows you to pick what type of appointment you want ?>
 <form action="studentScheduler.php" method="GET" name="form1">
@@ -156,10 +156,7 @@ $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 //an assignment of choice whether to delete the appointment or not and IF so uses the conditional below
 $rmvAppt = $_POST['delChoice'];
 echo($rmvAppt);
-if ($rmvAppt == 'yes')
-
-
-{
+if ($rmvAppt == 'yes'){
 
 //selects the appointment ID and matches it to the unique ID of the advising appointment
 $sql = "select * from `student Appts` WHERE `Student ID` = '$studID'";

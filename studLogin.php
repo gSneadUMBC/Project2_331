@@ -2,7 +2,7 @@
 session_start();
 session_destroy();
 session_start();
-include('style.html');
+include('loginStyle.html');
 $currentDate = getdate(date("U"));
 $_SESSION["CurrMonth"] = $currentDate[month];
 ?>

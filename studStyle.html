@@ -15,15 +15,13 @@ margin-left: auto;
 margin-right: auto;
 text-align: center;
     width:40%;  
-background-color:#F5CA5C;
+align: center;
+  background-color:#F5CA5C;
 }
 #navBar {
-margin-left: auto;
-margin-right: auto;
-
-    width:100%;
+    width:625px;
     height: 35px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Arial;
     font-weight: bold;
     text-align: center;
@@ -43,16 +41,14 @@ margin-right: auto;
     color: #FFFFFF;
     padding: 8px 8px 8px 8px;
 }
+#navBar #logOut a{
+    background-color: #FF4747;
+}
+
+
 #navBar a:hover {
     color: #000000;
     background-color:#999999 ;
-}
-
-table, td, th {
-
-    font-family: Arial;
-    border-radius: 5px;
-    border: 1px solid black
 }
 table {
     width: 100%;
@@ -64,14 +60,16 @@ button[type=submit] {
    border-radius: 5px;
 width:100%;
 }
+
+
 </style>
 <body>
 <div id="navBar">
 <ul>
-  <li><a href="index.php"> Home </a> </li>
   <li><a href="studentInfo.php"> My Info </a></li>
   <li><a href="advisorTable.php"> Advisors </a></li>
   <li><a href="studentScheduler.php"> Make an Appointment </a></li>
+  <li id="logOut"><a href="studLogin.php" background-color="#FF4747"> Log Out </a> </li>
 
 </ul>
 </div>
