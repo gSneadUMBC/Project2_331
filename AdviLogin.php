@@ -27,7 +27,7 @@ $_SESSION["CurrMonth"] = $mydate[month];
 </form>
 <br>
 <form action='schedule.php' >
-<input  type="submit" value = "view & schedule appointments">
+<input  type="submit" value = "view and schedule appointments">
 </form>
 
 <?php
