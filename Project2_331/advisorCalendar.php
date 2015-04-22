@@ -1,5 +1,5 @@
 <?php
-include('adviStyle.html');
+include('style.html');
 ?>
 <br><br>
 <form action="advisorCalendar.php" method='GET'>

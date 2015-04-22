@@ -1,12 +1,8 @@
 <?php
 session_start();
-<<<<<<< HEAD
-include('baseStyle.html');
-=======
 session_destroy();
 session_start();
 include('style.html');
->>>>>>> origin/josh_edits
 $currentDate = getdate(date("U"));
 $_SESSION["CurrMonth"] = $currentDate[month];
 ?>

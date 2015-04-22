@@ -1,7 +1,11 @@
 <?php
+<<<<<<< HEAD
+include('studStyle.html');
+=======
 session_start();
 $studID = $_SESSION["student"];
 include('style.html');
+>>>>>>> origin/josh_edits
 ?>
 <br>
 <h3> Your upcoming appointments</h3>

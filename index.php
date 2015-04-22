@@ -1,6 +1,3 @@
-<?php
-include('baseStyle.html');
-?>
 <!DOCTYPE HTML>
 <html>
 <head></head>

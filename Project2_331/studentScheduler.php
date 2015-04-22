@@ -2,13 +2,21 @@
 
 session_start();
 $studID = $_SESSION["student"];
+$testing = True;
 
-if ($_POST['monthChange']){
-	$_SESSION["CurrMonth"]= $_POST['monthChange'];
+
+if ($testing){
+if ( $_POST['prev'] == "prev"){
+	$_SESSION["MonthInt"]--;
+	echo("After if " . $_SESSION["MonthInt"]);	
+	echo("<br>pressed Prev");
+}
+elseif( $_POST['next'] == next)
+	$_SESSION["MonthInt"]++;
 }
 ?>
 
-<?php include("studStyle.html"); ?>
+<?php include("style.html"); ?>
 <form action="studentScheduler.php" method="POST" name="form1">
 <br>
 What kind of advising are you looking for?
@@ -23,10 +31,33 @@ Group
 
 What day would you like to look at?
 <?php
+$testing = True;
 
+$months = array("January", "Febuary", "March", "April", "May" );
+
+if ($_SESSION["MonthInt"]==null && $testing){
+for ($i = 0; $months[$i] != "April"; $i++){
+	$_SESSION["MonthInt"] = $i; 
+}
+
+	$_SESSION["MonthInt"] ++;
+	$monthInt = $_SESSION["MonthInt"];
+}
+
+
+if ($testing)
+{
+	$currentMonth = $months[$_SESSION["MonthInt"]];
+		include($currentMonth . ".html");
+
+}
+else{
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
+}
 ?>
+
+
 
 </form>
 <br>
@@ -82,33 +113,14 @@ What day would you like to look at?
 	echo("<input type='submit' value='Schedule' >");
 	echo("</form>");
 
+	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	$row = mysql_fetch_row($rs);
 
 if($picked)
 {
 
-echo($studID);
-  $valid = true;
-  $sql = "select * from `student Appts` where `Student ID` = '$studID'";
-  $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-  $row = mysql_fetch_row($rs);
-	echo("value is: ".$row[0]."<br>");
-  if($row[0])
-  {
-    $valid = false;
-	echo($valid."<br>");
-  }
- 
 
-
-if($valid == false)
-{
-echo("YOu already have an advising appointment!!!");
-}
-else
-{
-$sql = "select * from `Adv_made_Appts` WHERE `id` = '$picked'";
-	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-	$row = mysql_fetch_row($rs);
 $sql=
 "INSERT INTO `student Appts` (`Appt_id`,`Student ID`,`Date`, `Time`,`type`, `Advisor`, `Advisor E-mail`) 
 VALUES ('$picked','$studID','$row[2]','$row[1]','$row[3]', '$row[5]','$row[6]')"; 
@@ -116,7 +128,7 @@ $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 $sql = "UPDATE `Adv_made_Appts` SET `Slots`=`Slots` - 1 WHERE `date` = '$row[2]' AND `time` = '$row[1]' AND `Advisor`= '$row[5]'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-}
+
 }
 
 ?>

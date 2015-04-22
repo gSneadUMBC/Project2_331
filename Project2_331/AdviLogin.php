@@ -1,16 +1,5 @@
 <?php
 session_start();
-<<<<<<< HEAD
-include('baseStyle.html');
-=======
-session_destroy();
-
-session_start();
-
-$mydate=getdate(date("U"));
-$_SESSION["CurrMonth"] = $mydate[month];
-
->>>>>>> origin/josh_edits
 ?>
 
 <!DOCTYPE HTML>
@@ -33,7 +22,7 @@ $_SESSION["CurrMonth"] = $mydate[month];
 <form action='schedule.php' >
 <input  type="submit" value = "schedule appointments">
 </form>
-<form action='adviViewAppt.php' >
+<form action='adviViewAppts.php' >
 <input  type="submit" value = "view appointments">
 </form>
 <?php
