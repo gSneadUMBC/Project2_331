@@ -1,7 +1,13 @@
 Things to implement:
 
 - student recognition (greeting as they log in)
-- Logout button
-- advisor passwords
+- advisor passwords**have files
 - resend for appointment types
--add delete appointment buttons for advisors
+- login push to first page for all users
+- buttons resizing (taller would  nice)
+- advisor appoinent Details button in table row
+- deleting student made appoinments form info page
+- hook up other advisors schedule
+- General clarification if you see it
+- sorting for all calendars
+- adding the month of may
