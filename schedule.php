@@ -90,7 +90,7 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
 		$_SESSION['viewDate'] = $_GET['calDate'];
 	$date =$_SESSION['viewDate'];
 
-	if (!($_GET['time']=="blank") && !($_GET['advType']=="blank")){
+	if (!($_GET['time']=="blank") && !($_GET['advType']=="blank")&&($_GET['schedule'])){
 		
 		$grpsize = $_GET['grpSize'];
 		$advtype = $_GET['advType'];

@@ -2,8 +2,6 @@
 
 //starts session and assigns session variables
 session_start();
-$studID = $_SESSION["student"];
-
 
 if ($_GET['monthChange']){
 	$_SESSION["CurrMonth"]= $_GET['monthChange'];
