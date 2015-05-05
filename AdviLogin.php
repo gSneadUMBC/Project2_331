@@ -1,5 +1,17 @@
 <?php
+
 session_start();
+session_destroy();
+
+session_start();
+
+include("loginStyle.html");
+
+$mydate=getdate(date("U"));
+$_SESSION["CurrMonth"] = $mydate[month];
+
+include("CommonMethods.php");
+$COMMON = new common($debug);
 ?>
 
 <!DOCTYPE HTML>
@@ -12,20 +24,39 @@ session_start();
 <form action="AdviLogin.php" method="GET">
    Advisor E-mail:<br>
    <input type="email" name="email">
-   <br>
+<?php
+   echo("<br><br>");
+?>
    Password:<br>
    <input type="password" name="pwd">
-   <br>
+   <br><br>
 <input type="submit" value="Login">
 </form>
-
+<br>
 <form action='schedule.php' >
-<input  type="submit" value = "Schedule appointments">
+<input  type="submit" value = "schedule appointments">
 </form>
 <?php
-$_SESSION["user"]= $_GET['email'];
-$user = $_SESSION["user"];
-echo ("the user is ".$user);
+$user = $_GET['email'];
+
+$sql = "select `E-mail` from `Advisors`";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+$IDlist = array();
+
+while ($row = mysql_fetch_row($rs)){
+	$IDlist[] = $row[0];
+}
+
+if($user)
+{
+	if (in_array($user, $IDlist)){
+		echo ("Successfully logged in with: ".$user);
+		$_SESSION["user"]= $_GET['email'];
+	}
+	else
+		echo("<font color='red'>**Invalid Email</font>");
+}
 ?>
 </body>
 </html>

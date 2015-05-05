@@ -1,19 +1,24 @@
 <?php
 session_start();
-include('style.html');
+session_destroy();
+session_start();
+include('loginStyle.html');
 $currentDate = getdate(date("U"));
 $_SESSION["CurrMonth"] = $currentDate[month];
 ?>
+
 <br>
+
 <h2> Welcome to the UMBC ITE advising Sign-up web Application! </h2>
-<form action='studentInfo.php' method='post' name='info1'>
-E-mail:<br><input type='text' name='studEmail'><br>
-Password:<br><input type='text' name='studEmail'><br>
 
-<input type='submit'>
-
+<form action='studVal.php' method='POST'>
+Student ID:<br><input type='text' name='loginID'><br>
+<input type='submit' value = "Login">
 </form>
-
 <?php
+
+	//echo("<form action='studentScheduler.php' method='POST'>");
+	//echo("<input type='submit' value = 'View Schedule'><br>");
+
 include('footer.html');
 ?>

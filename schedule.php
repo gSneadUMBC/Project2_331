@@ -1,7 +1,10 @@
 <?php
 session_start();
-?>
+include('adviStyle.html');
+if ($_GET['monthChange'])
+	$_SESSION["CurrMonth"]= $_GET['monthChange'];
 
+?>
 
 <!DOCTYPE html>
 <html>
@@ -14,6 +17,7 @@ $COMMON = new common($debug);
 
 
 $AdEmail = $_SESSION["user"];
+$picked = $_GET['chosenAppt'];
 
 $sql= "SELECT `fname` FROM `Advisors` WHERE `E-mail` = '$AdEmail'";
 $rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
@@ -21,156 +25,183 @@ $row = mysql_fetch_row($rs1);
 $user =$row[0];
 
 
-
 $sql= "SELECT `lname` FROM `Advisors` WHERE `E-mail` = '$AdEmail'";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 $row = mysql_fetch_row($rs);
 $Advisor = $row[0];
 
-echo("Welcome, ".$user. " ". $Advisor."<br>")
+echo("Welcome, ".$user. " ". $Advisor."<br>");
 
 ?>
-<h3>Make a new appointment available!</h3>
-<form action="schedule.php" method="post">
-
-   Day of Appointment:
+<h2>Make a new appointment available!</h2>
+<form action="schedule.php" method="GET">
 <br>
-<input type="date" name="apptDate" min="2015-03-01" max="2015-04-30" ><br><br>
-<br>
-   Time:
-<br>
-<select name="time">
-   <option value="9:00:00"> 9:00 AM </option>
-   <option value="9:30:00"> 9:30 AM </option>
-   <option value="10:00:00"> 10:00 AM </option>
-   <option value="10:30:00"> 10:30 AM </option>
-   <option value="11:00:00"> 11:00 AM </option>
-   <option value="11:30:00"> 11:30 AM </option>
-   <option value="12:00:00"> 12:00 PM </option>
-   <option value="12:30:00"> 12:30 PM </option>
-   <option value="13:00:00"> 1:00 PM </option>
-   <option value="13:30:00"> 1:30 PM </option>
-   <option value="14:00:00"> 2:00 PM </option>
-   <option value="14:30:00"> 2:30 PM </option>
-   <option value="15:00:00"> 3:00 PM </option>
-   <option value="15:30:00"> 3:30 PM </option>
-   <option value="16:00:00"> 4:00 PM </option>
-</select>
-   Type:
-<br>
-<input type="radio" name="appType" value="group">Group
-<br>
-<input type="radio" name="appType" value="individual">Individual
-
-
-<br>
-<br>
-
-
-
-<input type="submit" value="Submit">
-</form>
-<br>
-
 <?php
-$COMMON = new common($debug);
 
+	$currentMonth = $_SESSION["CurrMonth"];
+	include($currentMonth . ".html");
 
-$appDate = 0;
-$appDate = $_POST['apptDate'];
-$apptTime = $_POST['time'];
-$apptType = $_POST['appType'];
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
+{
+	echo("<br>");
+	echo("<h3>Schedule appointment</h3>");
+	echo("<table border='2px'>");
+	echo("<tr><td>");
+	echo("Time");
+	echo("</td><td>");
+	echo("Type");
+	echo("</td><td>");
+	echo("Group Size");
+	echo("</td><tr><td>");
+	echo("<select name='time'>");
+   		echo("<option value='blank'> </option>");
+   		echo("<option value='9:00:00'> 9:00 AM </option>");
+   		echo("<option value='9:30:00'> 9:30 AM </option>");
+   		echo("<option value='10:00:00'> 10:00 AM </option>");
+   		echo("<option value='10:30:00'> 10:30 AM </option>");
+   		echo("<option value='11:00:00'> 11:00 AM </option>");
+   		echo("<option value='11:30:00'> 11:30 AM </option>");
+   		echo("<option value='12:00:00'> 12:00 PM </option>");
+   		echo("<option value='12:30:00'> 12:30 PM </option>");
+   		echo("<option value='13:00:00'> 1:00 PM </option>");
+   		echo("<option value='13:30:00'> 1:30 PM </option>");
+   		echo("<option value='14:00:00'> 2:00 PM </option>");
+   		echo("<option value='14:30:00'> 2:30 PM </option>");
+   		echo("<option value='15:00:00'> 3:00 PM </option>");
+   		echo("<option value='15:30:00'> 3:30 PM </option>");
+   		echo("<option value='16:00:00'> 4:00 PM </option>");
+		echo("<option value='16:30:00'> 4:30 PM </option>");
+	echo("</select></td><td>");
+	echo("<select name='advType'>");
+   		echo("<option value='blank'> </option>");
+   		echo("<option value='individual'> Indvidual </option>");
+   		echo("<option value='group'> Group </option>");
+	echo("</select></td><td>");
+	echo("<input type='text' name='grpSize' value='10'>");
+	echo("</td></tr></table>");
 
-$weekend = array("2015-03-28","2015-03-29","2015-04-04","2015-04-05"
-		 ,"2015-04-11","2015-04-12","2015-04-18","2015-04-19"
-		 ,"2015-04-25","2015-04-26","2015-05-02","2015-05-03");
-for($i=0;$i< count($weekend);$i++)
-  {
-    if($weekend[$i] == $appDate)
-      {
-	echo("That is a weekend! Choose a day during the week!<br>");
-	$appDate = 0;
-      }
-  }
+//For scheduling appointments
+	echo("<input type='submit' name='schedule' value='Submit'>");
+	echo("</form>");
+	echo("<br>");
+		$debug= false;
+	$COMMON = new common($debug);
+	if ($_GET['calDate'])
+		$_SESSION['viewDate'] = $_GET['calDate'];
+	$date =$_SESSION['viewDate'];
 
-$apptTime = $_POST['time'];
-$apptType = $_POST['appType'];
-if($appDate && $apptTime && $apptType){
-switch ($apptTime){
-case "9:00:00":
-   echo("The appointment is on ".$appDate." type is ".$apptType." at 9:00 AM");
-   break;
-case "9:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 9:30 AM");
-  break;
-case "10:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 10:00 AM");
-  break;
-case "10:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 10:30 AM");
-  break;
-case "11:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 11:00 AM");
-  break;
-case "11:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 11:30 AM");
-  break;
-case "12:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 12:00 PM");
-  break;
-case "12:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 12:30 PM");
-  break;
-case "1:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 1:00 PM");
-  break;
-case "1:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 1:30 PM");
-  break;
-case "2:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 2:00 PM");
-  break;
-case "2:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 2:30 PM");
-  break;
-case "3:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 3:00 PM");
-  break;
-case "3:30:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 3:30 PM");
-  break;
-case "4:00:00":
-  echo("The appointment is on ".$appDate." type is ".$apptType." at 4:00 PM");
-  break;
-default:
-  echo("You must choose a time for your appt!!");
+	if (!($_GET['time']=="blank") && !($_GET['advType']=="blank")&&($_GET['schedule'])){
+		
+		$grpsize = $_GET['grpSize'];
+		$advtype = $_GET['advType'];
+		$apptTime = $_GET['time'];
+		if (($_GET['advType']=="group") && !(empty($grpsize))){
+			$sql = "insert into `Adv_made_Appts`
+			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
+			values('$apptTime','$date', '$advtype','$grpsize','$Advisor','$AdEmail')";
+			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+		}
+		elseif($_GET['advType']=="individual"){
+			$sql = "insert into `Adv_made_Appts`
+			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
+			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail')";
+			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
+		}
+	}	
+echo("<h3>". $user. "'s schedule");
+	echo("<br>");
+
+//Scheduled appointment view 
+	echo("<form action='schedule.php' method='GET' name='form2'>");
+	$user = $_SESSION["user"];
+
+//deletes the appointment
+	if($_GET['delete'] && $picked){
+		$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
+		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	}
+
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+
+	echo("<table border='3px'>");
+	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+        echo("<tr>");
+        echo("<td align='center'>" . "<strong>Select" . "</td>");
+        echo("<td align='center'>" . "<strong>Type" . "</td>");
+        echo("<td align='center'>" . "<strong>Time" . "</td>");
+    
+        echo("</tr>");
+
+	while($row = mysql_fetch_row($rs))
+	  {     
+		$stdDate = date("g:i a", strtotime("$row[1]"));
+
+	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
+		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$stdDate."</td>");	   
+
+		echo("</tr>");    
+	  }
+
+	echo("</table>");
+	echo("<input type='submit' name='delete' value='delete'>      ");
+	echo("<input type='submit' name='details' value='View Appointment details'>");
+	echo("</form>");
+
 }
+if ($_GET['details'] && $picked){
+	$debug= false;
+	$COMMON = new common($debug);	
 
+	//picks time of selected appointment
+	$sql = "select * from `student Appts` WHERE `Appt_id` = '$picked'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	
+	$studIDs = array();
+	while($row = mysql_fetch_row($rs))
+	{
+		$inside = in_array($row[0],$studIDs);
+		if(!$inside){
+			$studIDs[] = $row[2];	
+			$detailDate = $row[3];
+			$detailTime = date("g:i a", strtotime("$row[4]"));
+		}
+	}
+	if($picked){
+		echo("<br>");
+		echo("<table border='1px'>");
+		echo("<th align='center' colspan = '5'> Displaying Students attending advising on ". $detailDate. " at ". $detailTime.  "</th>");
+       		echo("<tr>");
+        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
+        	echo("<td align='center'>" . "<strong>Major" . "</td>");
+		echo("<td align='center'>" . "<strong>First Name" . "</td>");
+ 		echo("<td align='center'>" . "<strong>Last Name" . "</td>");
+ 		echo("<td align='center'>" . "<strong>E-mail" . "</td>");
+		echo("</tr>");
 
+		for($i = 0;$i < count($studIDs);$i++){
+			$sql = "select * from `Students` WHERE `Student ID` = '$studIDs[$i]'";
+			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+			$row = mysql_fetch_row($rs);
 
-if($apptType == "group"){
-  $slots = 10;
+			echo("<tr>");
+        		echo("<td>" . "$row[1]" . "</td>");
+        		echo("<td>" . "$row[2]" . "</td>");
+			echo("<td>" . "$row[3]" . "</td>");
+ 			echo("<td>" . "$row[4]" . "</td>");
+ 			echo("<td>" . "$row[5]" . "</td>");
+			echo("</tr>");
+		}
+	}
 
+}	
+if($_GET['delete'] && $picked){
+
+//deletes the appointment
+	$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 }
-else{
-  $slots = 1;
-
-}
-
-$sql = "insert into `Adv_made_Appts`
-(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
-values('$apptTime','$appDate','$apptType',$slots,'$Advisor','$AdEmail')";
-$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-}
-else{
-  echo("Please choose a date, time, and type for your appointment");
-}
-
-$appDate = 0;
-
-
 ?>
-<form>
-<input type= "submit" value ="logout" onclick = 
+
 </body>
 </html>
