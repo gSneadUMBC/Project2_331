@@ -1,7 +1,10 @@
 <?php
 session_start();
-session_destroy();
-session_start();
+//resets session anytime this page is seen after a successfull login
+if($_SESSION['notID']=="false"){
+	session_destroy();
+	session_start();
+}
 include('loginStyle.html');
 $currentDate = getdate(date("U"));
 $_SESSION["CurrMonth"] = $currentDate[month];
@@ -10,15 +13,15 @@ $_SESSION["CurrMonth"] = $currentDate[month];
 <br>
 
 <h2> Welcome to the UMBC ITE advising Sign-up web Application! </h2>
-
-<form action='studVal.php' method='POST'>
-Student ID:<br><input type='text' name='loginID'><br>
-<input type='submit' value = "Login">
-</form>
 <?php
+echo("<form action='studVal.php' method='POST'>");
+echo("Student ID:<br><input type='text' name='loginID'>");
+echo("<input type='submit' value = 'Login'>");
+echo("</form>");
 
-	//echo("<form action='studentScheduler.php' method='POST'>");
-	//echo("<input type='submit' value = 'View Schedule'><br>");
+//login error message
+if ($_SESSION['notID'])
+	echo ("<font color='red'>*Enter exsiting student ID</font>");
 
 include('footer.html');
 ?>

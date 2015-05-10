@@ -27,11 +27,11 @@ if($student){
 }
 
 if (!$_SESSION['student']){
-	//echo("<br>this is where ths header is<br>");
+	$_SESSION['notID']="true";
 	header('location:studLogin.php');
 }
 else{
-
+	$_SESSION['notID']="false";
 	header('location:studentScheduler.php');
 }
 ?>

@@ -2,6 +2,7 @@
 <html>
 <head></head>
 <body>
+<?php session_start(); sesssion_destroy();?>
 include("baseStyle.html");
 <h1> Hello and welcome to the UMBC advising program </h1>
 <br>

@@ -17,6 +17,9 @@ $COMMON = new common($debug);
 
 $studID = $_SESSION["student"];
 
+if (!$studID)
+	header('locatoin:studLogin.php');
+
 $sql= "SELECT `firstname` FROM `Students` WHERE `Student ID` = '$studID'";
 $rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 $row = mysql_fetch_row($rs1);
@@ -102,10 +105,10 @@ if($date){
 
 	while($row = mysql_fetch_row($rs))
 	  {     
-
-	
+		$stdDate = date("g:i a", strtotime("$row[1]"));
+		
 	    	echo("<tr>" . "<td>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
-		echo("<td>".$row[1]."</td>"."<td>".$row[3]."</td>"."<td>".$row[4]."</td>"."<td>".$row[5]."</td>"."<td>".$row[6]."</td>");	   
+		echo("<td>". $stdDate ."</td>"."<td>".$row[3]."</td>"."<td>".$row[4]."</td>"."<td>".$row[5]."</td>"."<td>".$row[6]."</td>");	   
 
 		echo("</tr>");    
 	  }
