@@ -9,7 +9,28 @@ if ($_GET['monthChange']){
 ?>
 
 <?php //this line includes the style elements for the page ?>
-<?php include("studStyle.html"); ?>
+<?php include("studStyle.html"); 
+
+include("CommonMethods.php");
+$COMMON = new common($debug);
+
+
+$studID = $_SESSION["student"];
+
+$sql= "SELECT `firstname` FROM `Students` WHERE `Student ID` = '$studID'";
+$rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+$row = mysql_fetch_row($rs1);
+$userFName =$row[0]; 
+
+
+$sql= "SELECT `lastname` FROM `Students` WHERE `Student ID` = '$studID'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+$row = mysql_fetch_row($rs);
+$userLName = $row[0];
+
+echo("Welcome " . $userFName . " " . $userLName);
+
+?>
 
 <?php //this is the form that allows you to pick what type of appointment you want ?>
 <form action="studentScheduler.php" method="GET" name="form1">
@@ -35,16 +56,15 @@ What day would you like to look at?
 
 </form>
 
-
 <br>
 
 <?php
 
-	include("CommonMethods.php");
-	$debug = false;
+	//include("CommonMethods.php");
+	//$debug = false;
 
 	//variables declared and used in this page
-  	$COMMON = new common($debug);	
+  	//$COMMON = new common($debug);	
  	$date =$_GET['calDate'];
 	$type = $_GET['appointment'];
 	$monthChange = $_GET['prev'];

@@ -1,7 +1,7 @@
 <?php
+session_start();
 
-
-$student = $_POST['loginID'];
+$student = strtoupper($_POST['loginID']);
 
 if($student){
 	

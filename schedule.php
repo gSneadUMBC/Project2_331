@@ -70,8 +70,7 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
    		echo("<option value='15:00:00'> 3:00 PM </option>");
    		echo("<option value='15:30:00'> 3:30 PM </option>");
    		echo("<option value='16:00:00'> 4:00 PM </option>");
-		echo("<option value='16:30:00'> 4:30 PM </option>");
-	echo("</select></td><td>");
+		echo("</select></td><td>");
 	echo("<select name='advType'>");
    		echo("<option value='blank'> </option>");
    		echo("<option value='individual'> Indvidual </option>");
