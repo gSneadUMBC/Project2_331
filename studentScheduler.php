@@ -3,6 +3,9 @@
 //starts session and assigns session variables
 session_start();
 
+if (!$_SESSION["student"])
+	header('locatoin:studLogin.php');
+
 if ($_GET['monthChange']){
 	$_SESSION["CurrMonth"]= $_GET['monthChange'];
 }
@@ -16,9 +19,6 @@ $COMMON = new common($debug);
 
 
 $studID = $_SESSION["student"];
-
-if (!$studID)
-	header('locatoin:studLogin.php');
 
 $sql= "SELECT `firstname` FROM `Students` WHERE `Student ID` = '$studID'";
 $rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);

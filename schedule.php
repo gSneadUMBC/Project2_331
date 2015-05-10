@@ -55,6 +55,8 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
 	echo("</td><tr><td>");
 	echo("<select name='time'>");
    		echo("<option value='blank'> </option>");
+		echo("<option value='8:00:00'> 8:00 AM </option>");
+		echo("<option value='8:30:00'> 8:30 AM </option>");
    		echo("<option value='9:00:00'> 9:00 AM </option>");
    		echo("<option value='9:30:00'> 9:30 AM </option>");
    		echo("<option value='10:00:00'> 10:00 AM </option>");
