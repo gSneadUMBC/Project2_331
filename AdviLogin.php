@@ -38,7 +38,7 @@ $COMMON = new common($debug);
 </form>
 <?php
 $user = $_GET['email'];
-
+$pwd  = $_GET['pwd'];
 $sql = "select `E-mail` from `Advisors`";
 $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
@@ -48,14 +48,19 @@ while ($row = mysql_fetch_row($rs)){
 	$IDlist[] = $row[0];
 }
 
+$sql = "select `password` from `Advisors` WHERE `E-mail` = '$user'";
+$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+$row = mysql_fetch_row($rs);
+$validPword = $row[0];
 if($user)
 {
-	if (in_array($user, $IDlist)){
+	if (in_array($user, $IDlist) && $validPword == $pwd){
 		echo ("Successfully logged in with: ".$user);
 		$_SESSION["user"]= $_GET['email'];
+	
 	}
 	else
-		echo("<font color='red'>**Invalid Email</font>");
+		echo("<font color='red'>**Invalid Email or password. Please try again.</font>");
 }
 ?>
 </body>
