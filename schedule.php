@@ -41,7 +41,7 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
 {
 	echo("<br>");
 	echo("<h3>Schedule appointment</h3>");
@@ -109,6 +109,8 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
 		}
 	}	
+
+//Start of the table diplaying appointments
 echo("<h3>". $user. "'s schedule");
 	echo("<br>");
 
@@ -121,16 +123,25 @@ echo("<h3>". $user. "'s schedule");
 		$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
 		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
-
+	$sort = $_GET['sort'];
+	if($sort == 'time'){
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail' ORDER BY `time`";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	}
+	elseif($sort == 'type'){
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail' ORDER BY `type`";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	}
+	else{
 	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
+	}
 	echo("<table border='3px'>");
 	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
-        echo("<td align='center'>" . "<strong>Select" . "</td>");
-        echo("<td align='center'>" . "<strong>Type" . "</td>");
-        echo("<td align='center'>" . "<strong>Time" . "</td>");
+        echo("<th align='center'>" . "<strong>Select" . "</td>");
+        echo("<th align='center'>" . "<a href ='schedule.php?sort=type'><strong>Type" . "</td>");
+        echo("<th align='center'>" . "<a href ='schedule.php?sort=time'><strong>Time" . "</td>");
     
         echo("</tr>");
 
