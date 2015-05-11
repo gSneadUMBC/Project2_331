@@ -15,7 +15,7 @@ $_SESSION["CurrMonth"] = $currentDate[month];
 <h2> Welcome to the UMBC ITE advising Sign-up web Application! </h2>
 <?php
 echo("<form action='studVal.php' method='POST'>");
-echo("Student ID:<br><input type='text' name='loginID'>");
+echo("Student ID:<br><input type='Password' name='loginID'>");
 echo("<input type='submit' value = 'Login'>");
 echo("</form>");
 

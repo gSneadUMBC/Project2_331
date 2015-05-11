@@ -14,7 +14,7 @@ $AdEmail = $_SESSION["user"];
 if ($_GET['chngPass']){
 	if($_GET['newPass1']==$_GET['newPass2']){
 		$_SESSION['noMatch']="false";
-		if(strlen('newPass1') > 6){
+		if(strlen($_GET['newPass1']) > 6){
 			$_SESSION['shortPass']="false";
 			$sql= "SELECT * FROM `Advisors` WHERE `E-mail` = '$AdEmail'";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
@@ -34,18 +34,25 @@ if ($_GET['chngPass']){
 		$_SESSION['noMatch']="true";		
 }
 ?>
+
+<br>
+<b>Change Password</b>
+<br>
+****************************************************************************
 <form action="advSettings.php" method="get">
 Old Password:  <input type="password" name="oldPass"><br>
-<?php if($_SESSION['notPass'])
+<?php if($_SESSION['notPass']=="true")
 	echo("<font color='red'>*Wrong Password</font>");
 ?>
 <br>New Password: <input type="password" name="newPass1"><br>
-<?php if($_SESSION['noMatch']=="false")
-	echo ("<font color='red'>*New passwords don't match</font>");
-if($_SESSION['shortPass'])
-	echo("<font color='red'>*Passwords require atleast 7 characters</font>");
+<?php if($_SESSION['noMatch']=="true")
+	echo ("<font color='red'>*New passwords don't match</font><br>");
+if($_SESSION['shortPass']=="true")
+	echo("<font color='red'>*Passwords require atleast 7 characters</font><br>");
+if(!($_SESSION['noMatch']=="true")&&!($_SESSION['shortPass']=="true"))
+	echo("<br>");
 ?>
-<br>New Password: <input type="password" name="newPass2"><br>
+New Password: <input type="password" name="newPass2"><br><br>
 <input type="submit" name="chngPass" value="Change Password">
 </form>
 
