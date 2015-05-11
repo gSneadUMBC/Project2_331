@@ -41,7 +41,7 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['details'])
 {
 	echo("<br>");
 	echo("<h3>Schedule appointment</h3>");
@@ -125,11 +125,12 @@ echo("<h3>". $user. "'s schedule");
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 	echo("<table border='3px'>");
-	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+	echo("<th align='center' colspan = '4'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
         echo("<td align='center'>" . "<strong>Select" . "</td>");
         echo("<td align='center'>" . "<strong>Type" . "</td>");
         echo("<td align='center'>" . "<strong>Time" . "</td>");
+	echo("<td align='center'>" . "<strong>Details" . "</td>");
     
         echo("</tr>");
 
@@ -138,23 +139,27 @@ echo("<h3>". $user. "'s schedule");
 		$stdDate = date("g:i a", strtotime("$row[1]"));
 
 	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
-		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$stdDate."</td>");	   
+		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$stdDate."</td>");
+		echo("<td align='center'> <button type='submit' name='chosenAppt' value=$row[0]> Details </button></td>");	   
 
 		echo("</tr>");    
 	  }
 
 	echo("</table>");
-	echo("<input type='submit' name='delete' value='delete'>      ");
-	echo("<input type='submit' name='details' value='View Appointment details'>");
+	echo("<input type='submit' name='delete' value='Delete'>      ");
+	//echo("<input type='submit' name='details' value='View Appointment details'>");
 	echo("</form>");
 
 }
-if ($_GET['details'] && $picked){
+if ($_GET['chosenAppt']){
 	$debug= false;
 	$COMMON = new common($debug);	
 
+	$choice = $_GET['chosenAppt'];
+
 	//picks time of selected appointment
-	$sql = "select * from `student Appts` WHERE `Appt_id` = '$picked'";
+	$sql = "select * from `student Appts` WHERE `Appt_id` = '$choice'";
+	
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	
 	$studIDs = array();
@@ -167,7 +172,7 @@ if ($_GET['details'] && $picked){
 			$detailTime = date("g:i a", strtotime("$row[4]"));
 		}
 	}
-	if($picked){
+	
 		echo("<br>");
 		echo("<table border='1px'>");
 		echo("<th align='center' colspan = '5'> Displaying Students attending advising on ". $detailDate. " at ". $detailTime.  "</th>");
@@ -192,7 +197,7 @@ if ($_GET['details'] && $picked){
  			echo("<td>" . "$row[5]" . "</td>");
 			echo("</tr>");
 		}
-	}
+	
 
 }	
 if($_GET['delete'] && $picked){
