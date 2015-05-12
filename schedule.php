@@ -41,7 +41,7 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] || $_GET['details'])
 {
 	echo("<br>");
 	echo("<h3>Schedule appointment</h3>");
@@ -74,18 +74,31 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
    		echo("<option value='15:00:00'> 3:00 PM </option>");
    		echo("<option value='15:30:00'> 3:30 PM </option>");
    		echo("<option value='16:00:00'> 4:00 PM </option>");
-		echo("</select></td><td>");
+		echo("</select>");
+	if ($_GET['time']=="blank")
+		echo("<br><font color='red'>*Choose a time</font>");
+	echo("</td><td>");
 	echo("<select name='advType'>");
    		echo("<option value='blank'> </option>");
    		echo("<option value='individual'> Indvidual </option>");
    		echo("<option value='group'> Group </option>");
-	echo("</select></td><td>");
+	echo("</select>");
+	if ($_GET['advType']=="blank")
+		echo("<br><font color='red'>*Choose a Type </font>");
+	echo("</td><td>");
 	echo("<input type='text' name='grpSize' value='10'>");
+	if (($_GET['advType']=="group")&&(empty($_GET['grpSize'])))
+		echo("<br><font color='red'>*Group Appointments need a size</font>");
 	echo("</td>");
 	echo("<td><select name='grpMajor'>");
 		echo("<option value='blank'> </option>");
 		echo("<option value='CMSC'> CMSC </optoin>");
-		echo("<option value='CMPE'> CMPE </optoin></select>");
+		echo("<option value='CMPE'> CMPE </optoin>");
+		echo("<option value='EENG'> EENG </optoin>");
+		echo("<option value='CENG'> CENG </optoin>");
+		echo("<option value='MENG'> MENG </optoin></select>");
+	if (($_GET['advType']=="group")&&($_GET['grpMajor']=="blank"))
+		echo("<br><font color='red'>*Group Appointments </font>");
 	echo("</td></tr></table>");
 
 //For scheduling appointments
@@ -104,19 +117,19 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
 		$advtype = $_GET['advType'];
 		$apptTime = $_GET['time'];
 		$grpMajor = $_GET['grpMajor'];
+		
 		if (($_GET['advType']=="group") && !(empty($grpsize))  && !($grpMajor=="blank")){
 			$sql = "insert into `Adv_made_Appts`
 			(`time`,`date`,`type`,`Slots`,`Advisor`, `Major`, `size`)
 			values('$apptTime','$date', '$advtype','$grpsize','All', '$grpMajor', '$grpsize')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-		}
-		elseif($_GET['advType']=="individual"){
+		}elseif($_GET['advType']=="individual"){
 			$sql = "insert into `Adv_made_Appts`
 			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`, `size`, `Major`)
 			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail', '1', 'Any')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
 		}
-	}	
+	}
 
 //Start of the table diplaying appointments
 echo("<h3>". $user. "'s schedule");
@@ -149,13 +162,14 @@ echo("<h3>". $user. "'s schedule");
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	echo("<table border='3px'>");
-	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+	echo("<th align='center' colspan = '5'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
         echo("<th align='center'>" . "<strong>Select" . "</td>");
         echo("<th align='center'>" . "<a href ='schedule.php?sort=time'><strong>Time" . "</td>");
         echo("<th align='center'>" . "<a href ='schedule.php?sort=type'><strong>Type" . "</td>");
 	echo("<th align='center'>" . "<a href ='schedule.php?sort=major'><strong>Major" . "</td>");
-    
+        echo("<th align='center'>" . "<strong>" . "</td>");
+
         echo("</tr>");
 
 	while($row = mysql_fetch_row($rs))
@@ -169,21 +183,23 @@ echo("<h3>". $user. "'s schedule");
 			echo(" (". $row[4]. "/". $row[7]. ")");
 		echo("</td>");
 		echo("<td align='center'>".$row[8]."</td>");
+		echo("<td align='center'> <button type='submit' name='details' value=$row[0]> Details </button></td>");	
 		echo("</tr>");    
 	  }
 
 	echo("</table>");
-	echo("<input type='submit' name='delete' value='delete'>      ");
-	echo("<input type='submit' name='details' value='View Appointment details'>");
+	echo("<input type='submit' name='delete' value='Delete'>      ");
 	echo("</form>");
 
 }
-if ($_GET['details'] && $picked){
+if ($_GET['details']){
 	$debug= false;
 	$COMMON = new common($debug);	
 
+	$choice = $_GET['details'];
+
 	//picks time of selected appointment
-	$sql = "select * from `student Appts` WHERE `Appt_id` = '$picked'";
+	$sql = "select * from `student Appts` WHERE `Appt_id` = '$choice'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	
 	$studIDs = array();
@@ -196,31 +212,33 @@ if ($_GET['details'] && $picked){
 			$detailTime = date("g:i a", strtotime("$row[4]"));
 		}
 	}
-	if($picked){
-		echo("<br>");
-		echo("<table border='1px'>");
-		echo("<th align='center' colspan = '5'> Displaying Students attending advising on ". $detailDate. " at ". $detailTime.  "</th>");
-       		echo("<tr>");
-        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
-        	echo("<td align='center'>" . "<strong>Major" . "</td>");
-		echo("<td align='center'>" . "<strong>First Name" . "</td>");
- 		echo("<td align='center'>" . "<strong>Last Name" . "</td>");
- 		echo("<td align='center'>" . "<strong>E-mail" . "</td>");
+	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$choice'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	$row = mysql_fetch_row($rs);
+	echo("<br>");
+	echo("<table border='1px'>");
+	echo("<th align='center' colspan = '5'> Students attending advising on ". $detailDate. " at ". $detailTime. "<br>");
+	if($row[3]=="group")
+		echo("The group size is <input type='text' name='grpResize' value='$row[7]'><input type='submit'></th>");
+	echo("<tr>");
+       	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
+       	echo("<td align='center'>" . "<strong>Major" . "</td>");
+	echo("<td align='center'>" . "<strong>First Name" . "</td>");
+	echo("<td align='center'>" . "<strong>Last Name" . "</td>");
+	echo("<td align='center'>" . "<strong>E-mail" . "</td>");
+	echo("</tr>");
+
+	for($i = 0;$i < count($studIDs);$i++){
+		$sql = "select * from `Students` WHERE `Student ID` = '$studIDs[$i]'";
+		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+		$row = mysql_fetch_row($rs);
+		echo("<tr>");
+       		echo("<td>" . "$row[1]" . "</td>");
+       		echo("<td>" . "$row[2]" . "</td>");
+		echo("<td>" . "$row[3]" . "</td>");
+		echo("<td>" . "$row[4]" . "</td>");
+		echo("<td>" . "$row[5]" . "</td>");
 		echo("</tr>");
-
-		for($i = 0;$i < count($studIDs);$i++){
-			$sql = "select * from `Students` WHERE `Student ID` = '$studIDs[$i]'";
-			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-			$row = mysql_fetch_row($rs);
-
-			echo("<tr>");
-        		echo("<td>" . "$row[1]" . "</td>");
-        		echo("<td>" . "$row[2]" . "</td>");
-			echo("<td>" . "$row[3]" . "</td>");
- 			echo("<td>" . "$row[4]" . "</td>");
- 			echo("<td>" . "$row[5]" . "</td>");
-			echo("</tr>");
-		}
 	}
 
 }	
