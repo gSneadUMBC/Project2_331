@@ -40,8 +40,9 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
-if($_GET['grpReSize']){
-	$sql = "UPDATE `Adv_made_Appts` SET `Slots`= `$_GET['grpResize']` WHERE `id` = '$row[1]'";
+if($_SESSION['grpEdit']){
+	$resize = $_SESSION['grpEdit'];
+	$sql = "UPDATE `Adv_made_Appts` SET `Slots`= '$resize' WHERE `id` = '$row[1]'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
 }
@@ -226,6 +227,8 @@ if ($_GET['details']){
 	echo("<th align='center' colspan = '5'> Students attending advising on ". $detailDate. " at ". $detailTime);
 	if($row[3]=="group")
 		echo("<br>The group size is <input type='text' name='grpResize' value='$row[7]'><input type='submit' name='grpReSize'></th>");
+		$_SESSION['grpEdit'] = $_GET['grpReSize'];
+//echo($_SESSION['grpEdit']);
 	echo("<tr>");
        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
        	echo("<td align='center'>" . "<strong>Major" . "</td>");

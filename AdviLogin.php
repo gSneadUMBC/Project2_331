@@ -21,7 +21,7 @@ $COMMON = new common($debug);
 
 <h2> Please enter your Advisor email and password </h2>
 
-<form action="AdviLogin.php" method="GET">
+<form action="AdviVal.php" method="POST">
    Advisor E-mail:<br>
    <input type="email" name="email">
 <?php
@@ -33,30 +33,6 @@ $COMMON = new common($debug);
 <input type="submit" value="Login">
 </form>
 <br>
-<form action='schedule.php' >
-<input  type="submit" value = "schedule appointments">
-</form>
-<?php
-$user = $_GET['email'];
 
-$sql = "select `E-mail` from `Advisors`";
-$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-$IDlist = array();
-
-while ($row = mysql_fetch_row($rs)){
-	$IDlist[] = $row[0];
-}
-
-if($user)
-{
-	if (in_array($user, $IDlist)){
-		echo ("Successfully logged in with: ".$user);
-		$_SESSION["user"]= $_GET['email'];
-	}
-	else
-		echo("<font color='red'>**Invalid Email</font>");
-}
-?>
 </body>
 </html>
