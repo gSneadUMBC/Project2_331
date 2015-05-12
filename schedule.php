@@ -40,6 +40,11 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
+if($_GET['grpReSize']){
+	$sql = "UPDATE `Adv_made_Appts` SET `Slots`= `$_GET['grpResize']` WHERE `id` = '$row[1]'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	$row = mysql_fetch_row($rs);
+}
 
 if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] || $_GET['details'])
 {
@@ -197,6 +202,7 @@ if ($_GET['details']){
 	$COMMON = new common($debug);	
 
 	$choice = $_GET['details'];
+	
 
 	//picks time of selected appointment
 	$sql = "select * from `student Appts` WHERE `Appt_id` = '$choice'";
@@ -217,9 +223,9 @@ if ($_GET['details']){
 	$row = mysql_fetch_row($rs);
 	echo("<br>");
 	echo("<table border='1px'>");
-	echo("<th align='center' colspan = '5'> Students attending advising on ". $detailDate. " at ". $detailTime. "<br>");
+	echo("<th align='center' colspan = '5'> Students attending advising on ". $detailDate. " at ". $detailTime);
 	if($row[3]=="group")
-		echo("The group size is <input type='text' name='grpResize' value='$row[7]'><input type='submit'></th>");
+		echo("<br>The group size is <input type='text' name='grpResize' value='$row[7]'><input type='submit' name='grpReSize'></th>");
 	echo("<tr>");
        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");
        	echo("<td align='center'>" . "<strong>Major" . "</td>");
