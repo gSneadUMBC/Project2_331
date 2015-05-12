@@ -20,16 +20,12 @@ $COMMON = new common($debug);
 
 $studID = $_SESSION["student"];
 
-$sql= "SELECT `firstname` FROM `Students` WHERE `Student ID` = '$studID'";
+$sql= "SELECT * FROM `Students` WHERE `Student ID` = '$studID'";
 $rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 $row = mysql_fetch_row($rs1);
-$userFName =$row[0]; 
-
-
-$sql= "SELECT `lastname` FROM `Students` WHERE `Student ID` = '$studID'";
-$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-$row = mysql_fetch_row($rs);
-$userLName = $row[0];
+$userFName =$row[3]; 
+$userLName = $row[4];
+$userMajor = $row[2];
 
 echo("Welcome " . $userFName . " " . $userLName);
 
@@ -81,15 +77,13 @@ if($date){
 	//displays appointments based on type chosen
 	if($type == "any")
 	{
-		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `Slots` > 0";
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `Slots` > 0 AND (`Major`='$userMajor' OR `Major`='Any')";
 		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	else
 	{	
-	
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type' AND `Slots` > 0";
-	
-	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+		$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date'AND `type`='$type' AND `Slots` > 0 AND (`Major`='$userMajor' OR `Major`='Any')";
+		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	
 	//builds table with data from pulled appointments

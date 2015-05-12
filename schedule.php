@@ -52,6 +52,8 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
 	echo("Type");
 	echo("</td><td>");
 	echo("Group Size");
+	echo("</td><td>");
+	echo("Group Major");
 	echo("</td><tr><td>");
 	echo("<select name='time'>");
    		echo("<option value='blank'> </option>");
@@ -79,6 +81,11 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
    		echo("<option value='group'> Group </option>");
 	echo("</select></td><td>");
 	echo("<input type='text' name='grpSize' value='10'>");
+	echo("</td>");
+	echo("<td><select name='grpMajor'>");
+		echo("<option value='blank'> </option>");
+		echo("<option value='CMSC'> CMSC </optoin>");
+		echo("<option value='CMPE'> CMPE </optoin></select>");
 	echo("</td></tr></table>");
 
 //For scheduling appointments
@@ -96,16 +103,17 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'])
 		$grpsize = $_GET['grpSize'];
 		$advtype = $_GET['advType'];
 		$apptTime = $_GET['time'];
-		if (($_GET['advType']=="group") && !(empty($grpsize))){
+		$grpMajor = $_GET['grpMajor'];
+		if (($_GET['advType']=="group") && !(empty($grpsize))  && !($grpMajor=="blank")){
 			$sql = "insert into `Adv_made_Appts`
-			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
-			values('$apptTime','$date', '$advtype','$grpsize','$Advisor','$AdEmail')";
+			(`time`,`date`,`type`,`Slots`,`Advisor`, `Major`, `size`)
+			values('$apptTime','$date', '$advtype','$grpsize','All', '$grpMajor', '$grpsize')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 		}
 		elseif($_GET['advType']=="individual"){
 			$sql = "insert into `Adv_made_Appts`
-			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`)
-			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail')";
+			(`time`,`date`,`type`,`Slots`,`Advisor`,`Advisor Email`, `size`, `Major`)
+			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail', '1', 'Any')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
 		}
 	}	
@@ -125,23 +133,28 @@ echo("<h3>". $user. "'s schedule");
 	}
 	$sort = $_GET['sort'];
 	if($sort == 'time'){
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail' ORDER BY `time`";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND (`Advisor Email` = '$AdEmail' OR `Advisor`='All') ORDER BY `time`";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	elseif($sort == 'type'){
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail' ORDER BY `type`";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND (`Advisor Email` = '$AdEmail' OR `Advisor`='All') ORDER BY `type`";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	}
+	elseif($sort == 'major'){
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND (`Advisor Email` = '$AdEmail' OR `Advisor`='All') ORDER BY `major`";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	else{
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND (`Advisor Email` = '$AdEmail' OR `Advisor`='All')";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	}
 	echo("<table border='3px'>");
 	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
         echo("<th align='center'>" . "<strong>Select" . "</td>");
-        echo("<th align='center'>" . "<a href ='schedule.php?sort=type'><strong>Type" . "</td>");
         echo("<th align='center'>" . "<a href ='schedule.php?sort=time'><strong>Time" . "</td>");
+        echo("<th align='center'>" . "<a href ='schedule.php?sort=type'><strong>Type" . "</td>");
+	echo("<th align='center'>" . "<a href ='schedule.php?sort=major'><strong>Major" . "</td>");
     
         echo("</tr>");
 
@@ -150,8 +163,12 @@ echo("<h3>". $user. "'s schedule");
 		$stdDate = date("g:i a", strtotime("$row[1]"));
 
 	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
-		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$stdDate."</td>");	   
-
+		echo("<td align='center'>". $stdDate ."</td>");
+		echo("<td align='center'>".$row[3]);
+		if ($row[3]=="group")
+			echo(" (". $row[4]. "/". $row[7]. ")");
+		echo("</td>");
+		echo("<td align='center'>".$row[8]."</td>");
 		echo("</tr>");    
 	  }
 

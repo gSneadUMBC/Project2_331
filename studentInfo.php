@@ -7,7 +7,7 @@ include('studStyle.html');
 echo("<br>");
 include("CommonMethods.php");
 
-$debug="true";
+$debug="false";
 $COMMON = new Common($debug); 
 
 if ($_GET['delete']){
