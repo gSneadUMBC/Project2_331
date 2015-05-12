@@ -16,37 +16,37 @@ include("CommonMethods.php");
 $COMMON = new common($debug);
 
 
-$AdEmail = $_SESSION["user"];
-$picked = $_GET['chosenAppt'];
 
-echo("<select name='time'>");
-   		echo("<option value='blank'> </option>");
-		echo("<option value='8:00:00'> Josh Abrams </option>");
-		echo("<option value='8:30:00'> Anne Arey </option>");
-   		echo("<option value='9:00:00'> Emily Abrams-Stephens </option>");
 
-		echo("</select>");
 ?>
+
 <h2>Make a new appointment available!</h2>
 <form action="AdviViewer.php" method="GET">
 <br>
 <?php
+	echo("<select name = 'advisorOpton' >");
+	   	echo("<option value='josh.abrams@umbc.edu'> Josh Abrams </option>");
+		echo("<option value='annearey@umbc.edu'> Anne Arey </option>");
+   		echo("<option value='eastephe@umbc.edu'> Emily Abrams-Stephens </option>");
+
+		echo("</select>");
+
 
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
 
-if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'])
+if ($_GET['calDate'] || $_GET['advisorOpton'] )
 {
 	
 
 //For scheduling appointments
-	echo("<input type='submit' name='schedule' value='Submit'>");
 	echo("</form>");
 	echo("<br>");
 		$debug= false;
 	$COMMON = new common($debug);
-	if ($_GET['calDate'])
-		$_SESSION['viewDate'] = $_GET['calDate'];
+	$_SESSION['adviPick'] = $_GET['advisorOpton'];
+	$user = $_SESSION['adviPick'];
+	$_SESSION['viewDate'] = $_GET['calDate'];
 	$date =$_SESSION['viewDate'];
 
 	if (!($_GET['time']=="blank") && !($_GET['advType']=="blank")&&($_GET['schedule'])){
@@ -72,22 +72,17 @@ echo("<h3>". $user. "'s schedule");
 
 //Scheduled appointment view 
 	echo("<form action='AdviViewer.php' method='GET' name='form2'>");
-	$user = $_SESSION["user"];
 
-//deletes the appointment
-	if($_GET['delete'] && $picked){
-		$sql = "Delete from `Adv_made_Appts` where `id` = '$picked'";
-		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-	}
+	
 
 
-	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$AdEmail'";
+	$sql = "select * from `Adv_made_Appts` WHERE `date` = '$date' AND `Advisor Email` = '$user'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
 	echo("<table border='3px'>");
-	echo("<th align='center' colspan = '3'> Displaying $type appointments for $date  </th>");
+	echo("<th align='center' colspan = '2'> Displaying $type appointments for $date  </th>");
         echo("<tr>");
-        echo("<td align='center'>" . "<strong>Select" . "</td>");
+   
         echo("<td align='center'>" . "<strong>Type" . "</td>");
         echo("<td align='center'>" . "<strong>Time" . "</td>");
     
@@ -97,15 +92,13 @@ echo("<h3>". $user. "'s schedule");
 	  {     
 		$stdDate = date("g:i a", strtotime("$row[1]"));
 
-	    	echo("<tr>" . "<td align='center'>" ."<input type='radio' name='chosenAppt' value = $row[0] >"."</td>");
+	  
 		echo("<td align='center'>".$row[3]."</td>"."<td align='right'>".$stdDate."</td>");	   
 
 		echo("</tr>");    
 	  }
 
 	echo("</table>");
-	echo("<input type='submit' name='delete' value='delete'>      ");
-	echo("<input type='submit' name='details' value='View Appointment details'>");
 	echo("</form>");
 
 }
