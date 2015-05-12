@@ -1,7 +1,11 @@
 Things to implement:
 
-- student recognition (greeting as they log in)
-- Logout button
-- advisor passwords 
-- calendar buttons and refreshing (for some reason the calendar will not show up on the refreshed student scheduler) it takes two presses to on any button to change page
--add delete appointment buttons for students and advisors
+Dom - student recognition (greeting as they log in)
+Galen - advisor passwords**have files
+if there is time*- resend for appointment types
+Josh- buttons resizing on adv (taller would be nice)
+Josh - advisor appoinent Details button in table row
+Dom- deleting student made appoinments form info page(on currently schedule page)
+Galen- hook up other advisors schedule
+all- General clarification if you see it
+Galen- sorting for all calendars

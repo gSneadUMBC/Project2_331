@@ -2,7 +2,7 @@
 <html>
 <head></head>
 <body>
-include("baseStyle.html");
+<?php include("baseStyle.html"); ?>
 <h1> Hello and welcome to the UMBC advising program </h1>
 <br>
 
