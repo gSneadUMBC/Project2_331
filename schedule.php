@@ -40,14 +40,20 @@ echo("Welcome, ".$user. " ". $Advisor."<br>");
 
 	$currentMonth = $_SESSION["CurrMonth"];
 	include($currentMonth . ".html");
-if($_SESSION['grpEdit']){
-	$resize = $_SESSION['grpEdit'];
-	$sql = "UPDATE `Adv_made_Appts` SET `Slots`= '$resize' WHERE `id` = '$row[1]'";
+if($_GET['grpReSize']){
+	$resize = $_SESSION['resize'];
+	$sql = "select * from `Adv_made_Appts` WHERE `id` = '$resize'";
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	$row = mysql_fetch_row($rs);
+	
+	$sizeChange=  $_GET['grpResize'] - $row[7];
+	$newSlots = $row[4] + $sizeChange;
+	$newSize = $_GET['grpResize'];
+	$sql = "UPDATE `Adv_made_Appts` SET `Slots`='$newSlots',`size`='$newSize' WHERE `id` ='$resize'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 }
 
-if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] || $_GET['details'])
+if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] || $_GET['details'] || $_GET['grpReSize'])
 {
 	echo("<br>");
 	echo("<h3>Schedule appointment</h3>");
@@ -104,7 +110,7 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] ||
 		echo("<option value='CENG'> CENG </optoin>");
 		echo("<option value='MENG'> MENG </optoin></select>");
 	if (($_GET['advType']=="group")&&($_GET['grpMajor']=="blank"))
-		echo("<br><font color='red'>*Group Appointments </font>");
+		echo("<br><font color='red'>*Choose an major </font>");
 	echo("</td></tr></table>");
 
 //For scheduling appointments
@@ -116,6 +122,35 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] ||
 	if ($_GET['calDate'])
 		$_SESSION['viewDate'] = $_GET['calDate'];
 	$date =$_SESSION['viewDate'];
+//Checking to see if values are selected
+
+	$timeChoice = $_GET['time'];
+	$typeChoice = $_GET['advType'];
+
+if($timeChoice && $typeChoice)
+	{
+		//Checking for an already existing appointment at the given date and time
+		
+		$valid = true;
+  		$sql = "select * from `Adv_made_Appts` where `time` = '$timeChoice'
+			 and `date` = '$date' ";
+  		$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+  		$row = mysql_fetch_row($rs);
+		
+  		if($row[0])
+  		{
+    			$valid = false;
+			echo($valid."<br>");
+		}
+		
+		if($valid == false)
+		{
+			echo("You already have an appointment schedule for this time!" . "<br>");
+			echo("Check your already schedule appoinments below" . "<br>");
+		}
+		}
+		else
+		{
 
 	if (!($_GET['time']=="blank") && !($_GET['advType']=="blank")&&($_GET['schedule'])){
 		
@@ -135,7 +170,7 @@ if ($_GET['calDate'] || $_GET['schedule'] || $_GET['delete'] || $_GET['sort'] ||
 			values('$apptTime','$date', '$advtype','1','$Advisor','$AdEmail', '1', 'Any')";
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
 		}
-	}
+	}}
 
 //Start of the table diplaying appointments
 echo("<h3>". $user. "'s schedule");
@@ -225,9 +260,12 @@ if ($_GET['details']){
 	echo("<br>");
 	echo("<table border='1px'>");
 	echo("<th align='center' colspan = '5'> Students attending advising on ". $detailDate. " at ". $detailTime);
-	if($row[3]=="group")
+	if($row[3]=="group"){
+		echo("<form action='schedule.php' method='GET'>");
 		echo("<br>The group size is <input type='text' name='grpResize' value='$row[7]'><input type='submit' name='grpReSize'></th>");
-		$_SESSION['grpEdit'] = $_GET['grpReSize'];
+		echo("</form>");
+		$_SESSION['resize']=$choice;
+	}
 //echo($_SESSION['grpEdit']);
 	echo("<tr>");
        	echo("<td align='center'>" . "<strong>Student ID" . "</td>");

@@ -20,7 +20,7 @@ $COMMON = new common($debug);
 
 ?>
 
-<h2>Make a new appointment available!</h2>
+<h2>Choose an advisor and a day to see thier calendar</h2>
 <form action="AdviViewer.php" method="GET">
 <br>
 <?php
@@ -67,7 +67,12 @@ if ($_GET['calDate'] || $_GET['advisorOpton'] )
 			$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);		
 		}
 	}	
-echo("<h3>". $user. "'s schedule");
+$sql= "SELECT `fname` FROM `Advisors` WHERE `E-mail` = '$user'";
+$rs1 = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+$row = mysql_fetch_row($rs1);
+$userfn =$row[0];
+
+echo("<h3>". $userfn. "'s schedule");
 	echo("<br>");
 
 //Scheduled appointment view 
